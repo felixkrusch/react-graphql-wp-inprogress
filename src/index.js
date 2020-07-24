@@ -6,7 +6,7 @@ import Routes from "./components/Routes";
 import Config from "./wpconfig";
 // import { render } from "@wordpress/element";
 import ReactDOM from "react-dom";
-// import * as serviceWorker from "./serviceWorker";
+import * as serviceWorker from "./serviceWorker";
 
 // Apollo client 1
 const client = new ApolloClient({
@@ -28,4 +28,4 @@ ReactDOM.render(<App />, document.getElementById("root"));
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
+serviceWorker.unregister();

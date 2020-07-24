@@ -12,6 +12,33 @@ const MENU_QUERY = gql`
         title: label
         url
         target
+        childItems(where: { location: PRIMARY }) {
+          nodes {
+            label
+            title: label
+            url
+            id
+            connectedObject {
+              ... on MenuItem {
+                id
+                url
+                label
+              }
+              ... on Tag {
+                name
+                slug
+              }
+              ... on Category {
+                name
+                slug
+              }
+              ... on Page {
+                slug
+                id
+              }
+            }
+          }
+        }
         connectedObject {
           ... on MenuItem {
             id
@@ -29,12 +56,6 @@ const MENU_QUERY = gql`
           ... on Page {
             slug
             id
-
-            parent {
-              node {
-                slug
-              }
-            }
           }
           ... on Post {
             slug
@@ -52,25 +73,25 @@ const Header = () => {
   const { loading, error, data } = menuApi;
   if (loading) return <p>Loading MENU...</p>;
   if (error) return <p>Ooops!</p>;
-
-  const menu = data.menuItems.nodes;
+  const menu = data.menuItems.nodes.filter(n => !n.parentId);
+  console.log(menu);
   return menu.map(
-    ({ title, id, target, url, connectedObject: { slug, parent } }) => {
-      const parentSlug = parent?parent.node.slug:"";
+    ({ title, id, connectedObject: { slug }, childItems: { nodes } }) => {
       return (
         <ul key={id}>
           {/* // if key exists ... use router, display the label shown in the menu, not
       the page title */}
           <li>
-            <Link to={`/page/${parentSlug ? parentSlug + "/" : ""}${slug}`}>
-              {title}
-            </Link>
-          </li>
-          {/* // if MenuItem(external link) */}
-          <li>
-            <a href={url} target={target}>
-              {title}
-            </a>
+            <Link to={`/page/${slug}`}>{title}</Link>
+            {nodes.map(
+              ({ title, id, connectedObject: { slug: childSlug } }) => (
+                <ul key={id}>
+                  <li>
+                    <Link to={`/page/${slug}/${childSlug}`}>{title}</Link>
+                  </li>
+                </ul>
+              )
+            )}
           </li>
         </ul>
       );
