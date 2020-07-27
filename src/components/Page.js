@@ -30,8 +30,8 @@ const Page = () => {
 
   return (
     <div>
-      <h3>{page?.title}</h3>
-      <div>{ReactHtmlParser(page?.content)}</div>
+      <h3>{page && page.title}</h3>
+      <div>{ReactHtmlParser(page && page.content)}</div>
     </div>
   );
 };

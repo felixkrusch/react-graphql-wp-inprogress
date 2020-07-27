@@ -24,8 +24,8 @@ const Post = () => {
   const post = data.post;
   return (
     <div>
-      <h3>{post.title}</h3> 
-      <div>{ReactHtmlParser(post.content)}</div>
+      <h3>{post && post.title}</h3> 
+      <div>{ReactHtmlParser(post && post.content)}</div>
     </div>
   );
 };

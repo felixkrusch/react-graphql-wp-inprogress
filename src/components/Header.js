@@ -21,7 +21,7 @@ const MENU_QUERY = gql`
             connectedObject {
               ... on MenuItem {
                 id
-                url
+                menuUrl: url
                 label
               }
               ... on Tag {
@@ -42,7 +42,7 @@ const MENU_QUERY = gql`
         connectedObject {
           ... on MenuItem {
             id
-            url
+            menuUrl: url
             label
           }
           ... on Tag {
@@ -76,18 +76,43 @@ const Header = () => {
   const menu = data.menuItems.nodes.filter(n => !n.parentId);
   console.log(menu);
   return menu.map(
-    ({ title, id, connectedObject: { slug }, childItems: { nodes } }) => {
+    ({
+      title,
+      id,
+      connectedObject: { slug, menuUrl, label },
+      childItems: { nodes }
+    }) => {
       return (
         <ul key={id}>
           {/* // if key exists ... use router, display the label shown in the menu, not
       the page title */}
           <li>
-            <Link to={`/page/${slug}`}>{title}</Link>
+            {menuUrl ? (
+              <a href={menuUrl} target="_blank">
+                {label}
+              </a>
+            ) : (
+              <Link to={`/page/${slug}`}>{title}</Link>
+            )}
             {nodes.map(
-              ({ title, id, connectedObject: { slug: childSlug } }) => (
+              ({
+                title,
+                id,
+                connectedObject: {
+                  slug: childSlug,
+                  menuUrl: childMenuUrl,
+                  label
+                }
+              }) => (
                 <ul key={id}>
                   <li>
-                    <Link to={`/page/${slug}/${childSlug}`}>{title}</Link>
+                    {childMenuUrl ? (
+                      <a href={childMenuUrl} target="_blank">
+                        {label}
+                      </a>
+                    ) : (
+                      <Link to={`/page/${slug}/${childSlug}`}>{title}</Link>
+                    )}
                   </li>
                 </ul>
               )
