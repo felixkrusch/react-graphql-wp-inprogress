@@ -18,47 +18,6 @@ const MENU_QUERY = gql`
             title: label
             url
             id
-            connectedObject {
-              ... on MenuItem {
-                id
-                menuUrl: url
-                label
-              }
-              ... on Tag {
-                name
-                slug
-              }
-              ... on Category {
-                name
-                slug
-              }
-              ... on Page {
-                slug
-                id
-              }
-            }
-          }
-        }
-        connectedObject {
-          ... on MenuItem {
-            id
-            menuUrl: url
-            label
-          }
-          ... on Tag {
-            name
-            slug
-          }
-          ... on Category {
-            name
-            slug
-          }
-          ... on Page {
-            slug
-            id
-          }
-          ... on Post {
-            slug
           }
         }
       }
@@ -74,54 +33,29 @@ const Header = () => {
   if (loading) return <p>Loading MENU...</p>;
   if (error) return <p>Ooops!</p>;
   const menu = data.menuItems.nodes.filter(n => !n.parentId);
-  console.log(menu);
-  return menu.map(
-    ({
-      title,
-      id,
-      connectedObject: { slug, menuUrl, label },
-      childItems: { nodes }
-    }) => {
-      return (
-        <ul key={id}>
-          {/* // if key exists ... use router, display the label shown in the menu, not
-      the page title */}
-          <li>
-            {menuUrl ? (
-              <a href={menuUrl} target="_blank">
-                {label}
-              </a>
-            ) : (
-              <Link to={`/page/${slug}`}>{title}</Link>
-            )}
-            {nodes.map(
-              ({
-                title,
-                id,
-                connectedObject: {
-                  slug: childSlug,
-                  menuUrl: childMenuUrl,
-                  label
-                }
-              }) => (
-                <ul key={id}>
-                  <li>
-                    {childMenuUrl ? (
-                      <a href={childMenuUrl} target="_blank">
-                        {label}
-                      </a>
-                    ) : (
-                      <Link to={`/page/${slug}/${childSlug}`}>{title}</Link>
-                    )}
-                  </li>
-                </ul>
-              )
-            )}
-          </li>
-        </ul>
-      );
-    }
-  );
+  console.log("header menu", menu);
+  return menu.map(({ title, id, url, childItems: { nodes } }) => {
+    console.log("url...", url);
+    const newUrl = url.replace("https://demo.richwp.com", "");
+    console.log(newUrl);
+    return (
+      <ul key={id}>
+        <li>
+          <Link to={`${newUrl}`}>{title}</Link>
+          {nodes.map(({ title, id, url }) => {
+            const newUrl = url.replace("https://demo.richwp.com", "");
+            return (
+              <ul key={id}>
+                <li>
+                  <Link to={newUrl}>{title}</Link>
+                </li>
+              </ul>
+            );
+          })}
+        </li>
+      </ul>
+    );
+  });
 };
 
 export default Header;
