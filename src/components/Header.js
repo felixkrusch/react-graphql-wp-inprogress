@@ -33,11 +33,9 @@ const Header = () => {
   if (loading) return <p>Loading MENU...</p>;
   if (error) return <p>Ooops!</p>;
   const menu = data.menuItems.nodes.filter(n => !n.parentId);
-  console.log("header menu", menu);
+  console.log("header menu data...", menu);
   return menu.map(({ title, id, url, childItems: { nodes } }) => {
-    console.log("url...", url);
     const newUrl = url.replace("https://demo.richwp.com", "");
-    console.log(newUrl);
     return (
       <ul key={id}>
         <li>

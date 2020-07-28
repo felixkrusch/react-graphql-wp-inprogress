@@ -45,7 +45,7 @@ const PostPage = () => {
   const { loading, error, data } = useQuery(POST_PAGE_QUERY);
   if (loading) return <p>Loading Post Content ......</p>;
   if (error) return <p>Something wrong happened!</p>;
-  // console.log("data...", data, pathname);
+  console.log("post page data...", data, pathname);
 
   const {
     contentTypes: { nodes }
