@@ -1,8 +1,8 @@
 import React from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import Posts from "./Posts";
-import Post from "./Post";
-import Page from "./Page";
+import Tag from "./Tag";
+import Category from "./Category";
 import PostPage from "./PostPage";
 import Header from "./Header";
 
@@ -14,9 +14,10 @@ export default () => (
 
       <Switch>
         <Route exact path="/" component={Posts} />
+
+        <Route path="/tag/:slug?" component={Tag} />
+        <Route path="/category/:slug?" component={Category} />
         <Route exact path="/:slug/:slugChild?" component={PostPage} />
-        {/* <Route exact path="/post/:slug" component={Post} />
-        <Route path="/page/:slug/:slugChild?" component={Page} /> */}
       </Switch>
     </div>
   </BrowserRouter>

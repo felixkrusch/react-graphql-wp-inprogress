@@ -1,8 +1,7 @@
 // WordPress GraphQL API URL
-let url = 'https://demo.richwp.com/graphql';
-
+export const baseUrl = "https://demo.richwp.com";
 const Config = {
-  wpUrl: url,
+  wpUrl: `${baseUrl}/graphql`
 };
 
 export default Config;

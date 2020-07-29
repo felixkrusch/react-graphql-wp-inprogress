@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { Link } from "react-router-dom";
+import { baseUrl } from "../wpconfig";
 
 const MENU_QUERY = gql`
   query Menus {
@@ -35,13 +36,14 @@ const Header = () => {
   const menu = data.menuItems.nodes.filter(n => !n.parentId);
   console.log("header menu data...", menu);
   return menu.map(({ title, id, url, childItems: { nodes } }) => {
-    const newUrl = url.replace("https://demo.richwp.com", "");
+    const newUrl = url.replace(baseUrl, "");
+    console.log(newUrl);
     return (
       <ul key={id}>
         <li>
           <Link to={`${newUrl}`}>{title}</Link>
           {nodes.map(({ title, id, url }) => {
-            const newUrl = url.replace("https://demo.richwp.com", "");
+            const newUrl = url.replace(baseUrl, "");
             return (
               <ul key={id}>
                 <li>
