@@ -25,7 +25,14 @@ const MENU_QUERY = gql`
     }
   }
 `;
-
+const getUrl = url => {
+  url = url.replace(baseUrl, "");
+  console.log(url);
+  if (url.indexOf("://") >= 0) {
+    return { url, isExternal: true };
+  }
+  return { url };
+};
 const Header = () => {
   const menuApi = useQuery(MENU_QUERY, {
     fetchPolicy: "no-cache"
@@ -36,18 +43,29 @@ const Header = () => {
   const menu = data.menuItems.nodes.filter(n => !n.parentId);
   console.log("header menu data...", menu);
   return menu.map(({ title, id, url, childItems: { nodes } }) => {
-    const newUrl = url.replace(baseUrl, "");
-    console.log(newUrl);
+    const urlObj = getUrl(url);
     return (
       <ul key={id}>
         <li>
-          <Link to={`${newUrl}`}>{title}</Link>
+          {urlObj.isExternal ? (
+            <a target="_blank" href={urlObj.url}>
+              {title}
+            </a>
+          ) : (
+            <Link to={urlObj.url}>{title}</Link>
+          )}
           {nodes.map(({ title, id, url }) => {
-            const newUrl = url.replace(baseUrl, "");
+            const urlObj = getUrl(url);
             return (
               <ul key={id}>
                 <li>
-                  <Link to={newUrl}>{title}</Link>
+                  {urlObj.isExternal ? (
+                    <a target="_blank" href={urlObj.url}>
+                      {title}
+                    </a>
+                  ) : (
+                    <Link to={urlObj.url}>{title}</Link>
+                  )}
                 </li>
               </ul>
             );
