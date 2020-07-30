@@ -27,7 +27,7 @@ const Posts = () => {
   return nodes.map(({ postId, title, slug }) => (
     <div key={postId}>
       <h3>
-        <Link to={`post/${slug}`}>{title}</Link>
+        <Link to={`/${slug}/`}>{title}</Link>
       </h3>
     </div>
   ));
