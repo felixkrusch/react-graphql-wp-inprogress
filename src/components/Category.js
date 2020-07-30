@@ -10,6 +10,13 @@ const CATEGORY_QUERY = gql`
     category(id: $id, idType: SLUG) {
       name
       description
+      posts {
+        nodes {
+          id
+          title
+          date
+        }
+      }
     }
   }
 `;
@@ -24,8 +31,17 @@ const Category = () => {
   const { category } = data;
   return (
     <div>
-      <h3>{category && category.name}</h3>
-      <div>{category && category.description}</div>
+      <h3>{category.name}</h3>
+      <div>{category.description}</div>
+      <ul>
+        {category.posts.nodes.map(({ title, date }) => (
+          <li>
+            <div>Title: {title}</div>
+            <div>Date: {date}</div>
+            <br />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
