@@ -1,8 +1,9 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
+import { getUrl } from "./Header";
 
 //post query updated
 const TAG_QUERY = gql`
@@ -16,6 +17,7 @@ const TAG_QUERY = gql`
           id
           title
           date
+          link
         }
       }
     }
@@ -37,13 +39,16 @@ const Tag = () => {
       <div>{tag.description}</div>
 
       <ul>
-        {tag.posts.nodes.map(({ title, date }) => (
-          <li>
-            <div>Title: {title}</div>
-            <div>Date: {date}</div>
-            <br />
-          </li>
-        ))}
+        {tag.posts.nodes.map(({ title, date, link }) => {
+          const urlObj = getUrl(link);
+          return (
+            <li>
+              <Link to={urlObj.url}>{title}</Link>
+              <div>Date: {date}</div>
+              <br />
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

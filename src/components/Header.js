@@ -25,7 +25,7 @@ const MENU_QUERY = gql`
     }
   }
 `;
-const getUrl = url => {
+export const getUrl = url => {
   url = url.replace(baseUrl, "");
   console.log(url);
   if (url.indexOf("://") >= 0) {

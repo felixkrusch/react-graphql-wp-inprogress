@@ -1,9 +1,9 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
-
+import { getUrl } from "./Header";
 //post query updated
 const CATEGORY_QUERY = gql`
   query Category($id: ID!) {
@@ -15,6 +15,7 @@ const CATEGORY_QUERY = gql`
           id
           title
           date
+          link
         }
       }
     }
@@ -34,13 +35,16 @@ const Category = () => {
       <h3>{category.name}</h3>
       <div>{category.description}</div>
       <ul>
-        {category.posts.nodes.map(({ title, date }) => (
-          <li>
-            <div>Title: {title}</div>
-            <div>Date: {date}</div>
-            <br />
-          </li>
-        ))}
+        {category.posts.nodes.map(({ title, date, link }) => {
+          const urlObj = getUrl(link);
+          return (
+            <li>
+              <Link to={urlObj.url}>{title}</Link>
+              <div>Date: {date}</div>
+              <br />
+            </li>
+          );
+        })}
       </ul>
     </div>
   );
