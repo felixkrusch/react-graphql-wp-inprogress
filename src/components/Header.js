@@ -27,7 +27,7 @@ const MENU_QUERY = gql`
 `;
 export const getUrl = url => {
   url = url.replace(baseUrl, "");
-  console.log(url);
+  // console.log(url);
   if (url.indexOf("://") >= 0) {
     return { url, isExternal: true };
   }
@@ -41,7 +41,7 @@ const Header = () => {
   if (loading) return <p>Loading MENU...</p>;
   if (error) return <p>Ooops!</p>;
   const menu = data.menuItems.nodes.filter(n => !n.parentId);
-  console.log("header menu data...", menu);
+  // console.log("header menu data...", menu);
   return menu.map(({ title, id, url, childItems: { nodes } }) => {
     const urlObj = getUrl(url);
     return (

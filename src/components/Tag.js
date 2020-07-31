@@ -4,17 +4,31 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
 import { getUrl } from "./Header";
+import { Pagination } from "./Posts";
 
 //post query updated
 const TAG_QUERY = gql`
-  query Tag($id: ID!) {
+  query Tag(
+    $id: ID!
+    $first: Int
+    $last: Int
+    $after: String
+    $before: String
+  ) {
     tag(id: $id, idType: SLUG) {
       id
       description
       name
-      posts {
+
+      posts(first: $first, last: $last, after: $after, before: $before) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          startCursor
+          endCursor
+        }
         nodes {
-          id
+          postId
           title
           date
           link
@@ -24,10 +38,22 @@ const TAG_QUERY = gql`
   }
 `;
 
+const updateQuery = (previousResult, { fetchMoreResult }) => {
+  return fetchMoreResult.tag.posts.nodes.length
+    ? fetchMoreResult
+    : previousResult;
+};
 const Tag = () => {
   const { slug } = useParams();
-  const { loading, error, data } = useQuery(TAG_QUERY, {
-    variables: { id: slug }
+  const variables = {
+    first: 10,
+    last: null,
+    after: null,
+    before: null,
+    id: slug
+  };
+  const { loading, error, data, fetchMore } = useQuery(TAG_QUERY, {
+    variables
   });
   if (loading) return <p>Loading Post Content...</p>;
   if (error) return <p>Something wrong happened!</p>;
@@ -37,12 +63,17 @@ const Tag = () => {
     <div>
       <h3>Name: {tag.name}</h3>
       <div>{tag.description}</div>
-
+      <Pagination
+        fetchMore={fetchMore}
+        posts={tag.posts}
+        updateQuery={updateQuery}
+        variables={{ id: slug }}
+      />
       <ul>
-        {tag.posts.nodes.map(({ title, date, link }) => {
+        {tag.posts.nodes.map(({ title, date, link, postId }) => {
           const urlObj = getUrl(link);
           return (
-            <li>
+            <li key={postId}>
               <Link to={urlObj.url}>{title}</Link>
               <div>Date: {date}</div>
               <br />
