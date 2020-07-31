@@ -69,7 +69,7 @@ export const Pagination = ({ posts, fetchMore, updateQuery, variables }) => {
 };
 const Posts = () => {
   const variables = {
-    first: 100,
+    first: 10,
     last: null,
     after: null,
     before: null
