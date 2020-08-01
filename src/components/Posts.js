@@ -1,8 +1,9 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { Link } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
+import { usePostQuery } from "./usePostQuery";
 
 const POSTS_QUERY = gql`
   query GET_POSTS($first: Int, $last: Int, $after: String, $before: String) {
@@ -15,7 +16,7 @@ const POSTS_QUERY = gql`
       }
 
       nodes {
-        postId
+        databaseId
         title(format: RENDERED)
         slug
       }
@@ -25,7 +26,7 @@ const POSTS_QUERY = gql`
 const updateQuery = (previousResult, { fetchMoreResult }) => {
   return fetchMoreResult.posts.nodes.length ? fetchMoreResult : previousResult;
 };
-export const Pagination = ({ posts, fetchMore, updateQuery, variables }) => {
+export const Pagination = ({ posts, fetchMore, updateQuery, postsPerPage }) => {
   return (
     <div>
       {posts.pageInfo.hasPreviousPage && (
@@ -35,9 +36,8 @@ export const Pagination = ({ posts, fetchMore, updateQuery, variables }) => {
               variables: {
                 first: null,
                 after: null,
-                last: 10,
-                before: posts.pageInfo.startCursor || null,
-                ...variables
+                last: postsPerPage,
+                before: posts.pageInfo.startCursor || null
               },
               updateQuery
             });
@@ -51,11 +51,10 @@ export const Pagination = ({ posts, fetchMore, updateQuery, variables }) => {
           onClick={() => {
             fetchMore({
               variables: {
-                first: 10,
+                first: postsPerPage,
                 after: posts.pageInfo.endCursor || null,
                 last: null,
-                before: null,
-                ...variables
+                before: null
               },
               updateQuery
             });
@@ -68,31 +67,26 @@ export const Pagination = ({ posts, fetchMore, updateQuery, variables }) => {
   );
 };
 const Posts = () => {
-  const variables = {
-    first: 10,
-    last: null,
-    after: null,
-    before: null
-  };
-  const { loading, error, data, fetchMore } = useQuery(POSTS_QUERY, {
-    variables
+  const postsQuery = useLazyQuery(POSTS_QUERY);
+  const [, { fetchMore }] = postsQuery;
+  const { loading, data, error, postsPerPage } = usePostQuery({
+    query: postsQuery
   });
   if (loading) return <p>Loading Posts...</p>;
   if (error) return <p>Something wrong happened inside!</p>;
-
   // destructuring data
   const { posts } = data;
   const { nodes } = posts;
-
   return (
     <div>
       <Pagination
         fetchMore={fetchMore}
         posts={posts}
         updateQuery={updateQuery}
+        postsPerPage={postsPerPage}
       />
-      {nodes.map(({ postId, title, slug }) => (
-        <div key={postId}>
+      {nodes.map(({ databaseId, title, slug }) => (
+        <div key={databaseId}>
           <h3>
             <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
           </h3>

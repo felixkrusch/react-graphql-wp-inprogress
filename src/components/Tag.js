@@ -1,10 +1,11 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery, useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
 import { getUrl } from "./Header";
 import { Pagination } from "./Posts";
+import { usePostQuery } from "./usePostQuery";
 
 //post query updated
 const TAG_QUERY = gql`
@@ -14,13 +15,20 @@ const TAG_QUERY = gql`
     $last: Int
     $after: String
     $before: String
+    $tag: String
   ) {
     tag(id: $id, idType: SLUG) {
       id
       description
       name
 
-      posts(first: $first, last: $last, after: $after, before: $before) {
+      posts(
+        first: $first
+        last: $last
+        after: $after
+        before: $before
+        where: { tag: $tag }
+      ) {
         pageInfo {
           hasNextPage
           hasPreviousPage
@@ -28,7 +36,7 @@ const TAG_QUERY = gql`
           endCursor
         }
         nodes {
-          postId
+          databaseId
           title
           date
           link
@@ -45,17 +53,25 @@ const updateQuery = (previousResult, { fetchMoreResult }) => {
 };
 const Tag = () => {
   const { slug } = useParams();
-  const variables = {
-    first: 10,
-    last: null,
-    after: null,
-    before: null,
-    id: slug
-  };
-  const { loading, error, data, fetchMore } = useQuery(TAG_QUERY, {
-    variables
+  const tagQuery = useLazyQuery(TAG_QUERY);
+  const [, { fetchMore }] = tagQuery;
+  const { loading, data, error, postsPerPage } = usePostQuery({
+    query: tagQuery,
+    variables: { id: slug, tag: slug }
   });
-  if (loading) return <p>Loading Post Content...</p>;
+  console.log("tag page", data);
+  // const { slug } = useParams();
+  // const variables = {
+  //   first: 10,
+  //   last: null,
+  //   after: null,
+  //   before: null,
+  //   id: slug
+  // };
+  // const { loading, error, data, fetchMore } = useQuery(TAG_QUERY, {
+  //   variables
+  // });
+  if (loading) return <p>Loading Tag Content...</p>;
   if (error) return <p>Something wrong happened!</p>;
   const { tag } = data;
   console.log(tag);
@@ -66,14 +82,14 @@ const Tag = () => {
       <Pagination
         fetchMore={fetchMore}
         posts={tag.posts}
+        postsPerPage={postsPerPage}
         updateQuery={updateQuery}
-        variables={{ id: slug }}
       />
       <ul>
-        {tag.posts.nodes.map(({ title, date, link, postId }) => {
+        {tag.posts.nodes.map(({ title, date, link, databaseId }) => {
           const urlObj = getUrl(link);
           return (
-            <li key={postId}>
+            <li key={databaseId}>
               <Link to={urlObj.url}>{title}</Link>
               <div>Date: {date}</div>
               <br />

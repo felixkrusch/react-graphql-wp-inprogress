@@ -14,7 +14,6 @@ export default () => (
 
       <Switch>
         <Route exact path="/" component={Posts} />
-
         <Route path="/tag/:slug?" component={Tag} />
         <Route path="/category/:slug?" component={Category} />
         <Route exact path="/:slug/:slugChild?" component={PostPage} />
