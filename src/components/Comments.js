@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
-import { node } from "prop-types";
 
 //comment query updated
 
@@ -48,7 +47,7 @@ const CREATE_COMMENT = gql`
     }
   }
 `;
-const Comment = ({ node: { title, content, replies, date, author, id } }) => {
+const Comment = ({ node: { title, content, replies, date, author } }) => {
   return (
     <li>
       <b>{author.node.name}</b>
