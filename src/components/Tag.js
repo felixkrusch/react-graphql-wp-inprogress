@@ -1,8 +1,7 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { useQuery, useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import ReactHtmlParser from "react-html-parser";
 import { getUrl } from "./Header";
 import { Pagination } from "./Posts";
 import { usePostQuery } from "./usePostQuery";

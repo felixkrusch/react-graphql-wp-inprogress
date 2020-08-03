@@ -1,10 +1,8 @@
 import React from "react";
-import { useParams, useHistory, Switch, Route } from "react-router-dom";
+import { useHistory, Switch, Route } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import ReactHtmlParser from "react-html-parser";
 import Page from "./Page";
-import { find } from "lodash";
 import Post from "./Post";
 import { get } from "lodash";
 
@@ -15,25 +13,18 @@ const POST_PAGE_QUERY = gql`
     contentTypes {
       nodes {
         name
-        contentNodes {
+        contentNodes(first: 100) {
           nodes {
-            slug
             uri
-            ... on Page {
-              id
-              uri
-              slug
-            }
-            ... on MediaItem {
-              id
-              slug
-              uri
-            }
-            ... on Post {
-              id
-              uri
-              slug
-            }
+            #  ... on Page {
+            #    uri
+            #  }
+            #  ... on MediaItem {
+            #    uri
+            #  }
+            #  ... on Post {
+            #    uri
+            #  }
           }
         }
       }
@@ -69,7 +60,7 @@ const PostPage = () => {
     .filter(node => node.contentNodes.nodes.length > 0);
   // if post available in node
   const isPost = get(filterNode, "[0].name") === "post";
-  // console.log("filter.", filterNode);
+  // console.log("filter.", filterNode, nodes);
   return (
     <div>
       <Switch>

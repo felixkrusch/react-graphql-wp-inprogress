@@ -48,7 +48,7 @@ const Header = () => {
       <ul key={id}>
         <li>
           {urlObj.isExternal ? (
-            <a target="_blank" href={urlObj.url}>
+            <a target="_blank" rel="noopener noreferrer" href={urlObj.url}>
               {title}
             </a>
           ) : (
@@ -60,7 +60,11 @@ const Header = () => {
               <ul key={id}>
                 <li>
                   {urlObj.isExternal ? (
-                    <a target="_blank" href={urlObj.url}>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={urlObj.url}
+                    >
                       {title}
                     </a>
                   ) : (

@@ -2,17 +2,10 @@ import { useEffect, useState } from "react";
 import { useSettings } from "./useSettings";
 
 export const usePostQuery = ({ query, variables }) => {
-  const [
-    postsQuery,
-    { loading: isPostLoading, error: isPostError, data }
-  ] = query;
+  const [postsQuery, { error: isPostError, data }] = query;
   const [postsPerPage, setPostPerPage] = useState(0);
   const [loading, setLoading] = useState(true);
-  const {
-    data: settingsData,
-    loading: isSettingsLoading,
-    error: isSettingError
-  } = useSettings();
+  const { data: settingsData, error: isSettingError } = useSettings();
   useEffect(() => {
     if (!settingsData) return;
     const info = {
@@ -24,7 +17,7 @@ export const usePostQuery = ({ query, variables }) => {
     };
     setPostPerPage(settingsData.allSettings.readingSettingsPostsPerPage);
     postsQuery({ variables: info });
-  }, [settingsData]);
+  }, [settingsData, postsQuery, variables]);
 
   useEffect(() => {
     if (!data) return;
