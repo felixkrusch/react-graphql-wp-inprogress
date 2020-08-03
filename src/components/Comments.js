@@ -55,7 +55,6 @@ const Comment = ({ node: { title, content, replies, date, author, id } }) => {
       <div>{title}</div>
       <div>{date}</div>
       <div>{ReactHtmlParser(content)}</div>
-      <div>{id}</div>
       {replies && (
         <ul>
           {replies.nodes.map(node => (
