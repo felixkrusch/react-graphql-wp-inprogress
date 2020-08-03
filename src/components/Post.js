@@ -12,6 +12,7 @@ const POST_QUERY = gql`
       databaseId
       title(format: RENDERED)
       content(format: RENDERED)
+      commentStatus
     }
   }
 `;
@@ -28,7 +29,10 @@ const Post = () => {
     <div>
       <h3>{post && post.title}</h3>
       <div>{ReactHtmlParser(post && post.content)}</div>
-      <Comments contentId={post.databaseId} />
+      <Comments
+        contentId={post.databaseId}
+        commentStatus={post.commentStatus}
+      />
       {/* //comment list show avatar / name (link date to URL if it exists) / date
       /comment (max. comment deptp: 2) // comment reply */}
       {/* <h3 id="reply-title" class="comment-reply-title">

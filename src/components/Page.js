@@ -12,6 +12,7 @@ const PAGE_QUERY = gql`
       databaseId
       title
       content
+      commentStatus
     }
   }
 `;
@@ -34,7 +35,10 @@ const Page = () => {
     <div>
       <h3>{page && page.title}</h3>
       <div>{ReactHtmlParser(page && page.content)}</div>
-      <Comments contentId={page.databaseId} />
+      <Comments
+        contentId={page.databaseId}
+        commentStatus={page.commentStatus}
+      />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
+import Gravatar from "react-gravatar";
 
 //comment query updated
 
@@ -15,12 +16,21 @@ const COMMETS_QUERY = gql`
     author {
       node {
         name
+        url
+        email
+        ... on User {
+          avatar(size: 60) {
+            url
+            width
+            height
+          }
+        }
       }
     }
   }
 
   query Comments($contentId: ID!) {
-    comments(where: { contentId: $contentId }, first: 100) {
+    comments(where: { contentId: $contentId, parentIn: "" }, first: 100) {
       nodes {
         ...CommentFields
         replies {
@@ -40,6 +50,7 @@ const CREATE_COMMENT = gql`
         content
         author {
           node {
+            url
             name
           }
         }
@@ -48,9 +59,24 @@ const CREATE_COMMENT = gql`
   }
 `;
 const Comment = ({ node: { title, content, replies, date, author } }) => {
+  const authorUrl = author.node?.url;
   return (
     <li>
-      <b>{author.node.name}</b>
+      {author.node?.avatar && (
+        <img
+          alt="author-pic"
+          style={{ "border-radius": "50%" }}
+          src={author.node?.avatar?.url}
+          width={author.node?.avatar?.width}
+          height={author.node?.avatar?.height}
+        />
+      )}
+      {/* <Gravatar
+        size={60}
+        style={{ "border-radius": "50%" }}
+        email={author.node?.name}
+      /> */}
+      <a href={authorUrl ? authorUrl : null}>{author.node?.name}</a>
       <div>{title}</div>
       <div>{date}</div>
       <div>{ReactHtmlParser(content)}</div>
@@ -65,19 +91,17 @@ const Comment = ({ node: { title, content, replies, date, author } }) => {
   );
 };
 
-const Comments = ({ contentId }) => {
+const Comments = ({ contentId, commentStatus }) => {
   const { loading, error, data } = useQuery(COMMETS_QUERY, {
     variables: { contentId }
   });
   if (loading) return <p>Loading Comments Content...</p>;
   if (error) return <p>Something wrong happened!</p>;
+
   const comments = data.comments;
   return (
     <div>
-      {/* //comment list show avatar / name (link date to URL if it exists) / date
-      /comment (max. comment deptp: 2) // comment reply */}
-      <CreateComment contentId={contentId} />
-
+      {commentStatus === "open" && <CreateComment contentId={contentId} />}
       <ul>
         {comments.nodes.map(node => (
           <Comment key={node.id} node={node} />
@@ -109,8 +133,9 @@ const CreateComment = ({ contentId }) => {
       }
     });
   };
-  if (loading) return <p>Loading creating Comments Content...</p>;
-  if (error) return <p>Something wrong happened in comments!</p>;
+  // if (loading) return <p>Loading creating Comments Content...</p>;
+  // if (error) return <p>Something wrong happened in comments!</p>;
+
   return (
     <form className="comment-form">
       <h3 className="comment-reply-title">Write a Comment</h3>
@@ -160,19 +185,10 @@ const CreateComment = ({ contentId }) => {
         <button className="submit" onClick={handleSubmit}>
           Submit Comment
         </button>
-        {/* <input
-          type="hidden"
-          name="comment_post_ID"
-          value="155"
-          id="comment_post_ID"
-        />
-        <input
-          type="hidden"
-          name="comment_parent"
-          id="comment_parent"
-          value="0"
-        /> */}
       </p>
+      {data && (
+        <p style={{ color: "red" }}>Your comment is awaiting moderation.</p>
+      )}
     </form>
   );
 };
