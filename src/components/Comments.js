@@ -58,25 +58,32 @@ const CREATE_COMMENT = gql`
     }
   }
 `;
-const Comment = ({ node: { title, content, replies, date, author } }) => {
-  const authorUrl = author.node?.url;
+const Comment = ({ node: { title, content, replies, date, author, id } }) => {
+  const [isReply, setIsReply] = useState(false);
+  const node = author.node || {};
+  const avatar = node.avatar || {};
+  const authorUrl = node.url;
+
   return (
     <li>
-      {author.node?.avatar && (
+      {/* {id} */}
+      {/* {isReply && <CreateComment contentId={id} />} */}
+      {node.avatar && (
         <img
           alt="author-pic"
           style={{ "border-radius": "50%" }}
-          src={author.node?.avatar?.url}
-          width={author.node?.avatar?.width}
-          height={author.node?.avatar?.height}
+          src={avatar.url}
+          width={avatar.width}
+          height={avatar.height}
         />
       )}
       {/* <Gravatar
         size={60}
         style={{ "border-radius": "50%" }}
-        email={author.node?.name}
+        email={node.name}
       /> */}
-      <a href={authorUrl ? authorUrl : null}>{author.node?.name}</a>
+      <a href={authorUrl ? authorUrl : null}>{node.name}</a>
+      {/* <button onClick={() => setIsReply(true)}>Reply</button> */}
       <div>{title}</div>
       <div>{date}</div>
       <div>{ReactHtmlParser(content)}</div>
