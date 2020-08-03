@@ -3,11 +3,13 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
+import Comments from "./Comments";
 
 //pages query updated
 const PAGE_QUERY = gql`
   query Page($id: ID!) {
     page(id: $id, idType: URI) {
+      databaseId
       title
       content
     }
@@ -32,6 +34,7 @@ const Page = () => {
     <div>
       <h3>{page && page.title}</h3>
       <div>{ReactHtmlParser(page && page.content)}</div>
+      <Comments contentId={page.databaseId} />
     </div>
   );
 };

@@ -80,7 +80,6 @@ const Comments = ({ contentId }) => {
       /comment (max. comment deptp: 2) // comment reply */}
       <CreateComment contentId={contentId} />
 
-      <h3 className="comment-reply-title">Write a Comment</h3>
       <ul>
         {comments.nodes.map(node => (
           <Comment key={node.id} node={node} />
@@ -116,6 +115,8 @@ const CreateComment = ({ contentId }) => {
   if (error) return <p>Something wrong happened in comments!</p>;
   return (
     <form className="comment-form">
+      <h3 className="comment-reply-title">Write a Comment</h3>
+
       <p className="comment-notes">
         <span id="email-notes">Your email address will not be published.</span>
         Required fields are marked <span className="required">*</span>
