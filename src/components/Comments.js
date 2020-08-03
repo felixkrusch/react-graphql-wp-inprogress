@@ -10,9 +10,12 @@ const COMMETS_QUERY = gql`
   fragment CommentFields on Comment {
     id
     date
-    type
-    approved
     content
+    parent {
+      node {
+        id
+      }
+    }
     author {
       node {
         name
@@ -58,7 +61,11 @@ const CREATE_COMMENT = gql`
     }
   }
 `;
-const Comment = ({ node: { title, content, replies, date, author, id } }) => {
+const Comment = ({
+  node: { title, content, replies, date, author, id, parent },
+
+  contentId
+}) => {
   const [isReply, setIsReply] = useState(false);
   const node = author.node || {};
   const avatar = node.avatar || {};
@@ -67,11 +74,10 @@ const Comment = ({ node: { title, content, replies, date, author, id } }) => {
   return (
     <li>
       {/* {id} */}
-      {/* {isReply && <CreateComment contentId={id} />} */}
       {node.avatar && (
         <img
           alt="author-pic"
-          style={{ "border-radius": "50%" }}
+          style={{ borderRadius: "50%" }}
           src={avatar.url}
           width={avatar.width}
           height={avatar.height}
@@ -83,7 +89,9 @@ const Comment = ({ node: { title, content, replies, date, author, id } }) => {
         email={node.name}
       /> */}
       <a href={authorUrl ? authorUrl : null}>{node.name}</a>
-      {/* <button onClick={() => setIsReply(true)}>Reply</button> */}
+      <br />
+      {!parent && <button onClick={() => setIsReply(true)}>Reply</button>}
+      {isReply && <CreateComment contentId={contentId} parentId={id} />}
       <div>{title}</div>
       <div>{date}</div>
       <div>{ReactHtmlParser(content)}</div>
@@ -111,14 +119,14 @@ const Comments = ({ contentId, commentStatus }) => {
       {commentStatus === "open" && <CreateComment contentId={contentId} />}
       <ul>
         {comments.nodes.map(node => (
-          <Comment key={node.id} node={node} />
+          <Comment key={node.id} node={node} contentId={contentId} />
         ))}
       </ul>
     </div>
   );
 };
 
-const CreateComment = ({ contentId }) => {
+const CreateComment = ({ contentId, parentId }) => {
   const [addComment, { data, error, loading }] = useMutation(CREATE_COMMENT);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -126,12 +134,13 @@ const CreateComment = ({ contentId }) => {
   const [url, setUrl] = useState("");
   const handleSubmit = e => {
     e.preventDefault();
+    const parent = parentId ? window.atob(parentId).split(":")[1] : 0;
     addComment({
       variables: {
         input: {
-          parent: 0,
+          parent,
           commentOn: contentId,
-          clientMutationId: "CreateComment",
+          clientMutationId: `${parentId}`,
           content: message,
           author: name,
           authorEmail: email,
