@@ -2,43 +2,42 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
-import Gravatar from "react-gravatar";
 
 //comment query updated
 
 const COMMETS_QUERY = gql`
-  fragment CommentFields on Comment {
-    id
-    date
-    content
-    parent {
-      node {
-        id
-      }
-    }
-    author {
-      node {
-        name
-        url
-        email
-        ... on User {
-          avatar(size: 60) {
-            url
-            width
-            height
-          }
-        }
-      }
-    }
-  }
+  #  fragment CommentFields on Comment {
+  #    id
+  #    date
+  #    content
+  #    parent {
+  #      node {
+  #        id
+  #      }
+  #    }
+  #    author {
+  #      node {
+  #        name
+  #        url
+  #        email
+  #        ... on User {
+  #          avatar(size: 60) {
+  #            url
+  #            width
+  #            height
+  #          }
+  #        }
+  #      }
+  #    }
+  #  }
 
   query Comments($contentId: ID!) {
     comments(where: { contentId: $contentId, parentIn: "" }, first: 100) {
       nodes {
-        ...CommentFields
+        id
         replies {
           nodes {
-            ...CommentFields
+            id
           }
         }
       }
@@ -61,12 +60,49 @@ const CREATE_COMMENT = gql`
     }
   }
 `;
-const Comment = ({
-  node: { title, content, replies, date, author, id, parent },
 
-  contentId
-}) => {
+const COMMET_QUERY = gql`
+  fragment CommentField on Comment {
+    id
+    date
+    content
+    author {
+      node {
+        name
+        url
+        email
+        ... on User {
+          avatar(size: 60) {
+            url
+            width
+            height
+          }
+        }
+      }
+    }
+  }
+
+  query Comment($id: ID!) {
+    comment(id: $id) {
+      ...CommentField
+      replies {
+        nodes {
+          id
+        }
+      }
+    }
+  }
+`;
+
+const Comment = ({ node: { id }, contentId, level }) => {
   const [isReply, setIsReply] = useState(false);
+  const { loading, error, data } = useQuery(COMMET_QUERY, {
+    variables: { id }
+  });
+  if (loading) return <p>Loading Comments Content...</p>;
+  if (error) return <p>Something wrong happened!</p>;
+  const { title, content, replies, date, author } = data.comment;
+
   const node = author.node || {};
   const avatar = node.avatar || {};
   const authorUrl = node.url;
@@ -83,14 +119,10 @@ const Comment = ({
           height={avatar.height}
         />
       )}
-      {/* <Gravatar
-        size={60}
-        style={{ "border-radius": "50%" }}
-        email={node.name}
-      /> */}
+
       <a href={authorUrl ? authorUrl : null}>{node.name}</a>
       <br />
-      {!parent && <button onClick={() => setIsReply(true)}>Reply</button>}
+      {level < 5 && <button onClick={() => setIsReply(true)}>Reply</button>}
       {isReply && <CreateComment contentId={contentId} parentId={id} />}
       <div>{title}</div>
       <div>{date}</div>
@@ -98,7 +130,12 @@ const Comment = ({
       {replies && (
         <ul>
           {replies.nodes.map(node => (
-            <Comment key={node.id} node={node} />
+            <Comment
+              key={node.id}
+              node={node}
+              contentId={contentId}
+              level={level + 1}
+            />
           ))}
         </ul>
       )}
@@ -119,7 +156,7 @@ const Comments = ({ contentId, commentStatus }) => {
       {commentStatus === "open" && <CreateComment contentId={contentId} />}
       <ul>
         {comments.nodes.map(node => (
-          <Comment key={node.id} node={node} contentId={contentId} />
+          <Comment key={node.id} node={node} contentId={contentId} level={1} />
         ))}
       </ul>
     </div>
@@ -127,7 +164,7 @@ const Comments = ({ contentId, commentStatus }) => {
 };
 
 const CreateComment = ({ contentId, parentId }) => {
-  const [addComment, { data, error, loading }] = useMutation(CREATE_COMMENT);
+  const [addComment, { data }] = useMutation(CREATE_COMMENT);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
