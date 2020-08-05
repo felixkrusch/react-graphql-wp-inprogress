@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
@@ -42,6 +42,7 @@ const AUTHOR_QUERY = gql`
       nodes {
         databaseId
         title
+        uri
         excerpt
         date
         slug
@@ -75,9 +76,12 @@ const AuthorArchive = () => {
         {console.log(posts)}
         {posts.nodes.map(post => (
           <li key={post.databaseId}>
-            <h3>{post.title}</h3>
+            <h3>
+              <Link to={post.uri}>{post.title}</Link>
+            </h3>
             <div>{post.date}</div>
             <div>{ReactHtmlParser(replaceUrl(post.excerpt))}</div>
+            <Link to={post.uri}>Read More</Link>
           </li>
         ))}
       </ul>

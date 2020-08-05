@@ -11,7 +11,7 @@ import Config from "./wpconfig";
 import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
 import introspectionQueryResultData from "./fragmentTypes.json";
-
+import "./index.css";
 // https://www.apollographql.com/docs/react/v2.5/advanced/fragments/#fragments-on-unions-and-interfaces
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData
