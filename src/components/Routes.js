@@ -5,6 +5,7 @@ import Tag from "./Tag";
 import Category from "./Category";
 import PostPage from "./PostPage";
 import Header from "./Header";
+import AuthorArchive from "./AuthorArchive";
 
 export default () => (
   // You need to wrap the Switch with BrowserRouter
@@ -14,6 +15,7 @@ export default () => (
 
       <Switch>
         <Route exact path="/" component={Posts} />
+        <Route path="/author/:slug?" component={AuthorArchive} />
         <Route path="/tag/:slug?" component={Tag} />
         <Route path="/category/:slug?" component={Category} />
         <Route exact path="/:slug/:slugChild?" component={PostPage} />

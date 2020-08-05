@@ -1,9 +1,10 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
 import Comments from "./Comments";
+import { node } from "prop-types";
 
 //post query updated
 const POST_QUERY = gql`
@@ -13,10 +14,45 @@ const POST_QUERY = gql`
       title(format: RENDERED)
       content(format: RENDERED)
       commentStatus
+      tags {
+        nodes {
+          name
+        }
+      }
+      categories {
+        nodes {
+          name
+        }
+      }
+      author {
+        node {
+          description
+          name
+          uri
+          avatar {
+            url
+          }
+        }
+      }
     }
   }
 `;
-
+const Author = ({ author }) => {
+  const node = author.node;
+  const avatar = node.avatar;
+  return (
+    <div>
+      <h3>About Author</h3>
+      {node.description && (
+        <Link to={node.uri}>
+          <img src={avatar.url} alt={"author picture"} />
+          <div>{node.name}</div>
+          <div>{node.description}</div>
+        </Link>
+      )}
+    </div>
+  );
+};
 const Post = () => {
   const { slug } = useParams();
   const { loading, error, data } = useQuery(POST_QUERY, {
@@ -29,92 +65,38 @@ const Post = () => {
     <div>
       <h3>{post && post.title}</h3>
       <div>{ReactHtmlParser(post && post.content)}</div>
+      <Author author={post.author} />
+      <Tags tags={post.tags} />
+      <Categories categories={post.categories} />
       <Comments
         contentId={post.databaseId}
         commentStatus={post.commentStatus}
       />
-      {/* //comment list show avatar / name (link date to URL if it exists) / date
-      /comment (max. comment deptp: 2) // comment reply */}
-      {/* <h3 id="reply-title" class="comment-reply-title">
-        Write a Comment
-      </h3> */}
-      {/* <form
-        action="https://demo.richwp.com/wp-comments-post.php"
-        method="post"
-        id="commentform"
-        class="comment-form"
-        novalidate
-      >
-        <p class="comment-notes">
-          <span id="email-notes">
-            Your email address will not be published.
-          </span>{" "}
-          Required fields are marked <span class="required">*</span>
-        </p>
-        <p class="comment-form-comment">
-          <textarea
-            id="comment"
-            name="comment"
-            placeholder="* Message"
-            rows="8"
-            aria-required="true"
-          ></textarea>
-        </p>
-        <div class="comment-form-column-wrapper">
-          <p class="comment-form-author comment-form-column">
-            <input
-              id="author"
-              name="author"
-              placeholder="* Name"
-              type="text"
-              value=""
-              aria-required="true"
-            />
-          </p>
-          <p class="comment-form-email comment-form-column">
-            <input
-              id="email"
-              name="email"
-              placeholder="* Email"
-              type="text"
-              value=""
-              aria-required="true"
-            />
-          </p>
-          <p class="comment-form-url comment-form-column">
-            <input
-              id="url"
-              name="url"
-              placeholder="Website"
-              type="text"
-              value=""
-            />
-          </p>
-        </div>
-        <p class="form-submit">
-          <input
-            name="submit"
-            type="submit"
-            id="submit"
-            class="submit"
-            value="Submit Comment"
-          />{" "}
-          <input
-            type="hidden"
-            name="comment_post_ID"
-            value="155"
-            id="comment_post_ID"
-          />
-          <input
-            type="hidden"
-            name="comment_parent"
-            id="comment_parent"
-            value="0"
-          />
-        </p>
-      </form> */}
     </div>
   );
 };
-
+const Tags = ({ tags }) => {
+  return (
+    <div>
+      <h3>Tags</h3>
+      {tags.nodes.map(tag => (
+        <div>
+          <p>{tag.name}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
+const Categories = ({ categories }) => {
+  return (
+    <div>
+      <h3>Categories</h3>
+      {categories.nodes.map(category => (
+        <div>
+          <p>{category.name}</p>
+        </div>
+      ))}
+    </div>
+  );
+};
 export default Post;
