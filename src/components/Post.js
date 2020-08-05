@@ -16,11 +16,13 @@ const POST_QUERY = gql`
       commentStatus
       tags {
         nodes {
+          id
           name
         }
       }
       categories {
         nodes {
+          id
           name
         }
       }
@@ -37,18 +39,18 @@ const POST_QUERY = gql`
     }
   }
 `;
-const Author = ({ author }) => {
-  const node = author.node;
-  const avatar = node.avatar;
+export const Author = ({ author, link }) => {
+  const avatar = author.avatar;
   return (
     <div>
       <h3>About Author</h3>
-      {node.description && (
-        <Link to={node.uri}>
+      {author.description && (
+        <div>
           <img src={avatar.url} alt={"author picture"} />
-          <div>{node.name}</div>
-          <div>{node.description}</div>
-        </Link>
+          <div>{author.name}</div>
+          <div>{author.description}</div>
+          {link && <Link to={author.uri}>More from this Author</Link>}
+        </div>
       )}
     </div>
   );
@@ -65,7 +67,7 @@ const Post = () => {
     <div>
       <h3>{post && post.title}</h3>
       <div>{ReactHtmlParser(post && post.content)}</div>
-      <Author author={post.author} />
+      <Author author={post.author.node} link />
       <Tags tags={post.tags} />
       <Categories categories={post.categories} />
       <Comments
@@ -80,7 +82,7 @@ const Tags = ({ tags }) => {
     <div>
       <h3>Tags</h3>
       {tags.nodes.map(tag => (
-        <div>
+        <div key={tag.id}>
           <p>{tag.name}</p>
         </div>
       ))}
@@ -92,7 +94,7 @@ const Categories = ({ categories }) => {
     <div>
       <h3>Categories</h3>
       {categories.nodes.map(category => (
-        <div>
+        <div key={category.id}>
           <p>{category.name}</p>
         </div>
       ))}

@@ -17,7 +17,7 @@ export const usePostQuery = ({ query, variables }) => {
     };
     setPostPerPage(settingsData.allSettings.readingSettingsPostsPerPage);
     postsQuery({ variables: info });
-  }, [settingsData, postsQuery, variables]);
+  }, [settingsData]);
 
   useEffect(() => {
     if (!data) return;
