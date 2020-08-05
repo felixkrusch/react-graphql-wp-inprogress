@@ -6,6 +6,7 @@ import ReactHtmlParser from "react-html-parser";
 import { Pagination } from "./Posts";
 import { Author } from "./Post";
 import { usePostQuery } from "./usePostQuery";
+import { baseUrl } from "../wpconfig";
 
 //post query updated
 const AUTHOR_QUERY = gql`
@@ -41,13 +42,16 @@ const AUTHOR_QUERY = gql`
       nodes {
         databaseId
         title
-        content
+        excerpt
         date
         slug
       }
     }
   }
 `;
+const replaceUrl = url => {
+  return url.replace(baseUrl, "");
+};
 const updateQuery = (previousResult, { fetchMoreResult }) => {
   return fetchMoreResult.posts.nodes.length ? fetchMoreResult : previousResult;
 };
@@ -67,13 +71,13 @@ const AuthorArchive = () => {
   return (
     <div>
       <Author author={user} />
-
       <ul>
+        {console.log(posts)}
         {posts.nodes.map(post => (
           <li key={post.databaseId}>
             <h3>{post.title}</h3>
             <div>{post.date}</div>
-            <div>{ReactHtmlParser(post.content)}</div>
+            <div>{ReactHtmlParser(replaceUrl(post.excerpt))}</div>
           </li>
         ))}
       </ul>
