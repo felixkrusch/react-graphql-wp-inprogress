@@ -1,10 +1,9 @@
 import React from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
 import Comments from "./Comments";
-import { node } from "prop-types";
 
 //post query updated
 const POST_QUERY = gql`
@@ -14,6 +13,7 @@ const POST_QUERY = gql`
       title(format: RENDERED)
       content(format: RENDERED)
       commentStatus
+
       tags {
         nodes {
           id
@@ -57,16 +57,25 @@ export const Author = ({ author, link }) => {
 };
 const Post = () => {
   const { slug } = useParams();
+  const history = useHistory();
   const { loading, error, data } = useQuery(POST_QUERY, {
     variables: { id: slug }
   });
   if (loading) return <p>Loading Post Content...</p>;
   if (error) return <p>Something wrong happened!</p>;
+  const handleClick = e => {
+    const { target } = e;
+    const dataId = target.getAttribute("data-id");
+    if (dataId) {
+      e.preventDefault();
+      history.push(`/post-format-gallery/${dataId}`);
+    }
+  };
   const post = data.post;
   return (
     <div>
       <h3>{post && post.title}</h3>
-      <div>{ReactHtmlParser(post && post.content)}</div>
+      <div onClick={handleClick}>{ReactHtmlParser(post && post.content)}</div>
       <Author author={post.author.node} link />
       <Tags tags={post.tags} />
       <Categories categories={post.categories} />

@@ -6,7 +6,7 @@ import { baseUrl } from "../wpconfig";
 
 const MENU_QUERY = gql`
   query Menus {
-    menuItems(where: { location: PRIMARY }) {
+    menuItems(where: { location: PRIMARY }, first: 100) {
       nodes {
         id
         parentId

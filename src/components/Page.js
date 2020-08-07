@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
@@ -19,7 +19,7 @@ const PAGE_QUERY = gql`
 
 const Page = () => {
   const { slug, slugChild } = useParams();
-
+  const history = useHistory();
   // creating complete slug path
   const path = `${slug}/${slugChild ? slugChild : ""}`;
   const { loading, error, data } = useQuery(PAGE_QUERY, {
@@ -30,11 +30,21 @@ const Page = () => {
 
   // destructuring data
   const { page } = data;
-
+  const handleClick = e => {
+    const { target } = e;
+    const dataId = target.getAttribute("data-id");
+    if (dataId) {
+      e.preventDefault();
+      history.push(`/post-format-gallery/${dataId}`);
+    }
+  };
   return (
     <div>
       <h3>{page && page.title}</h3>
-      <div>{ReactHtmlParser(page && page.content)}</div>
+      {/* <div>
+        {contentParser({ content: page.content }, { wordPressUrl: baseUrl })}
+      </div> */}
+      <div onClick={handleClick}>{ReactHtmlParser(page && page.content)}</div>
       <Comments
         contentId={page.databaseId}
         commentStatus={page.commentStatus}

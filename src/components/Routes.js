@@ -6,6 +6,7 @@ import Category from "./Category";
 import PostPage from "./PostPage";
 import Header from "./Header";
 import AuthorArchive from "./AuthorArchive";
+import Gallery from "./Gallery";
 
 export default () => (
   // You need to wrap the Switch with BrowserRouter
@@ -18,6 +19,7 @@ export default () => (
         <Route path="/author/:slug?" component={AuthorArchive} />
         <Route path="/tag/:slug?" component={Tag} />
         <Route path="/category/:slug?" component={Category} />
+        <Route exact path="/post-format-gallery/:id" component={Gallery} />
         <Route exact path="/:slug/:slugChild?" component={PostPage} />
       </Switch>
     </div>
