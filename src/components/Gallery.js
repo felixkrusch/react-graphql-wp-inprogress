@@ -9,6 +9,7 @@ const GALLERY_QUERY = gql`
   query Gallery($id: ID!) {
     mediaItem(id: $id, idType: DATABASE_ID) {
       id
+      title
       caption
       mediaItemUrl
       altText
@@ -33,6 +34,7 @@ const Gallery = () => {
     <div>
       Gallery
       <figure>
+        <div>{mediaItem.title}</div>
         <img src={mediaItem.mediaItemUrl} alt={mediaItem.altText} />
         <figcaption>{ReactHtmlParser(mediaItem.caption)}</figcaption>
       </figure>
