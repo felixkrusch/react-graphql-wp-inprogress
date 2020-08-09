@@ -4,7 +4,7 @@ import { useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
 import { Pagination } from "./Posts";
-import { Author } from "./Post";
+import { Author } from "./Page";
 import { usePostQuery } from "./usePostQuery";
 import { baseUrl } from "../wpconfig";
 
