@@ -13,6 +13,7 @@ const PAGE_QUERY = gql`
       title
       content
       commentStatus
+      date
       template {
         ... on FullWidthTemplate {
           templateName
@@ -77,6 +78,8 @@ const Page = () => {
     const dataId = target.getAttribute("data-id");
     if (dataId && hasParentAnchor) {
       e.preventDefault();
+      const parent = target.parentElement;
+      if (!parent.href.includes("post-format-gallery")) return;
       const parentUl = target.closest("ul");
       const images = parentUl.querySelectorAll("img");
       const imagesDataIds = Array.from(images).map(img =>
@@ -100,9 +103,8 @@ const Page = () => {
   return (
     <div>
       <h3>{page && page.title}</h3>
-      {/* <div>
-        {contentParser({ content: page.content }, { wordPressUrl: baseUrl })}
-      </div> */}
+      <div>{page.date}</div>
+
       <div onClick={handleClick}>
         {ReactHtmlParser(replaceUrl(page && page.content))}
       </div>
