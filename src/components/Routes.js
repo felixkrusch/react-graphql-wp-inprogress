@@ -7,6 +7,7 @@ import Header from "./Header";
 import AuthorArchive from "./AuthorArchive";
 import Gallery from "./Gallery";
 import Page from "./Page";
+import Footer from "./Footer";
 
 export default () => (
   // You need to wrap the Switch with BrowserRouter
@@ -22,6 +23,7 @@ export default () => (
         <Route exact path="/post-format-gallery/:id" component={Gallery} />
         <Route exact path="/:slug/:slugChild?" component={Page} />
       </Switch>
+      <Footer />
     </div>
   </BrowserRouter>
 );

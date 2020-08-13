@@ -100,12 +100,6 @@ const Header = () => {
           </ul>
         );
       })}
-      <h3>footer block</h3>
-      {blockAreas.nodes
-        .filter(({ slug }) => slug === "footer-blocks")
-        .map(({ content, databaseId }) => (
-          <div key={databaseId}>{ReactHtmlParser(content)}</div>
-        ))}
     </div>
   );
 };

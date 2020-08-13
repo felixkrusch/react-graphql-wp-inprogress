@@ -5,12 +5,20 @@ import { Link } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
 import { usePostQuery } from "./usePostQuery";
 const STICKY_POSTS_QUERY = gql`
-  query stickeyPosts {
+  query stickyPosts {
     stickyPosts: posts(where: { onlySticky: true }) {
       nodes {
         databaseId
         title(format: RENDERED)
         slug
+        link
+        excerpt
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
       }
     }
   }
@@ -76,6 +84,24 @@ export const Pagination = ({ posts, fetchMore, updateQuery, postsPerPage }) => {
     </div>
   );
 };
+const FeaturedSection = ({ stickyPosts }) => {
+  return stickyPosts.nodes.map(
+    ({ databaseId, title, slug, featuredImage, excerpt }) => (
+      <div key={databaseId}>
+        <h3>
+          <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
+        </h3>
+        <div>
+          <img
+            src={featuredImage && featuredImage.node.sourceUrl}
+            alt={featuredImage && featuredImage.node.altText}
+          />
+        </div>
+        <div>{excerpt}</div>
+      </div>
+    )
+  );
+};
 const Posts = () => {
   const postsQuery = useLazyQuery(POSTS_QUERY);
   const { data: stickeyPostData, loading: sLoading, error: sError } = useQuery(
@@ -99,14 +125,9 @@ const Posts = () => {
         updateQuery={updateQuery}
         postsPerPage={postsPerPage}
       />
-      {!posts.pageInfo.hasPreviousPage &&
-        stickyPosts.nodes.map(({ databaseId, title, slug }) => (
-          <div key={databaseId}>
-            <h3>
-              <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
-            </h3>
-          </div>
-        ))}
+      {!posts.pageInfo.hasPreviousPage && (
+        <FeaturedSection stickyPosts={stickyPosts} />
+      )}
       {nodes
         .filter(({ databaseId }) => !stickeyPostIds.includes(databaseId))
         .map(({ databaseId, title, slug }) => (
