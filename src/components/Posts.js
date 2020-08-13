@@ -1,10 +1,20 @@
 import React from "react";
-import { useLazyQuery } from "@apollo/react-hooks";
+import { useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { Link } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
 import { usePostQuery } from "./usePostQuery";
-
+const STICKY_POSTS_QUERY = gql`
+  query stickeyPosts {
+    stickyPosts: posts(where: { onlySticky: true }) {
+      nodes {
+        databaseId
+        title(format: RENDERED)
+        slug
+      }
+    }
+  }
+`;
 const POSTS_QUERY = gql`
   query GET_POSTS($first: Int, $last: Int, $after: String, $before: String) {
     posts(first: $first, last: $last, after: $after, before: $before) {
@@ -68,15 +78,19 @@ export const Pagination = ({ posts, fetchMore, updateQuery, postsPerPage }) => {
 };
 const Posts = () => {
   const postsQuery = useLazyQuery(POSTS_QUERY);
+  const { data: stickeyPostData, loading: sLoading, error: sError } = useQuery(
+    STICKY_POSTS_QUERY
+  );
   const [, { fetchMore }] = postsQuery;
   const { loading, data, error, postsPerPage } = usePostQuery({
     query: postsQuery
   });
-  if (loading) return <p>Loading Posts...</p>;
-  if (error) return <p>Something wrong happened inside!</p>;
-  // destructuring data
+  if (loading || sLoading) return <p>Loading Posts...</p>;
+  if (error || sError) return <p>Something wrong happened inside!</p>;
+  const { stickyPosts } = stickeyPostData;
   const { posts } = data;
   const { nodes } = posts;
+  const stickeyPostIds = stickyPosts.nodes.map(({ databaseId }) => databaseId);
   return (
     <div>
       <Pagination
@@ -85,13 +99,23 @@ const Posts = () => {
         updateQuery={updateQuery}
         postsPerPage={postsPerPage}
       />
-      {nodes.map(({ databaseId, title, slug }) => (
-        <div key={databaseId}>
-          <h3>
-            <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
-          </h3>
-        </div>
-      ))}
+      {!posts.pageInfo.hasPreviousPage &&
+        stickyPosts.nodes.map(({ databaseId, title, slug }) => (
+          <div key={databaseId}>
+            <h3>
+              <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
+            </h3>
+          </div>
+        ))}
+      {nodes
+        .filter(({ databaseId }) => !stickeyPostIds.includes(databaseId))
+        .map(({ databaseId, title, slug }) => (
+          <div key={databaseId}>
+            <h3>
+              <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
+            </h3>
+          </div>
+        ))}
     </div>
   );
 };

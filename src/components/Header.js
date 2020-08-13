@@ -3,9 +3,22 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { Link } from "react-router-dom";
 import { baseUrl } from "../wpconfig";
+import ReactHtmlParser from "react-html-parser";
 
 const MENU_QUERY = gql`
   query Menus {
+    blockAreas {
+      nodes {
+        databaseId
+        content
+        slug
+        #  template {
+        #    ... on HeaderBlockAreaTemplate {
+        #      templateName
+        #    }
+        #  }
+      }
+    }
     menuItems(where: { location: PRIMARY }, first: 100) {
       nodes {
         id
@@ -41,43 +54,60 @@ const Header = () => {
   if (loading) return <p>Loading MENU...</p>;
   if (error) return <p>Ooops!</p>;
   const menu = data.menuItems.nodes.filter(n => !n.parentId);
-  // console.log("header menu data...", menu);
-  return menu.map(({ title, id, url, childItems: { nodes } }) => {
-    const urlObj = getUrl(url);
-    return (
-      <ul key={id}>
-        <li>
-          {urlObj.isExternal ? (
-            <a target="_blank" rel="noopener noreferrer" href={urlObj.url}>
-              {title}
-            </a>
-          ) : (
-            <Link to={urlObj.url}>{title}</Link>
-          )}
-          {nodes.map(({ title, id, url }) => {
-            const urlObj = getUrl(url);
-            return (
-              <ul key={id}>
-                <li>
-                  {urlObj.isExternal ? (
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={urlObj.url}
-                    >
-                      {title}
-                    </a>
-                  ) : (
-                    <Link to={urlObj.url}>{title}</Link>
-                  )}
-                </li>
-              </ul>
-            );
-          })}
-        </li>
-      </ul>
-    );
-  });
+  const blockAreas = data.blockAreas;
+  console.log("header menu data...", blockAreas);
+  return (
+    <div>
+      <h3>header blocks</h3>
+      {blockAreas.nodes
+        .filter(({ slug }) => slug === "header-blocks")
+        .map(({ content, databaseId }) => (
+          <div key={databaseId}>{ReactHtmlParser(content)}</div>
+        ))}
+      {menu.map(({ title, id, url, childItems: { nodes } }) => {
+        const urlObj = getUrl(url);
+        return (
+          <ul key={id}>
+            <li>
+              {urlObj.isExternal ? (
+                <a target="_blank" rel="noopener noreferrer" href={urlObj.url}>
+                  {title}
+                </a>
+              ) : (
+                <Link to={urlObj.url}>{title}</Link>
+              )}
+              {nodes.map(({ title, id, url }) => {
+                const urlObj = getUrl(url);
+                return (
+                  <ul key={id}>
+                    <li>
+                      {urlObj.isExternal ? (
+                        <a
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={urlObj.url}
+                        >
+                          {title}
+                        </a>
+                      ) : (
+                        <Link to={urlObj.url}>{title}</Link>
+                      )}
+                    </li>
+                  </ul>
+                );
+              })}
+            </li>
+          </ul>
+        );
+      })}
+      <h3>footer block</h3>
+      {blockAreas.nodes
+        .filter(({ slug }) => slug === "footer-blocks")
+        .map(({ content, databaseId }) => (
+          <div key={databaseId}>{ReactHtmlParser(content)}</div>
+        ))}
+    </div>
+  );
 };
 
 export default Header;
