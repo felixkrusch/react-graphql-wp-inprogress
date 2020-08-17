@@ -152,7 +152,7 @@ const Comments = ({ contentId, commentStatus }) => {
 
   const comments = data.comments;
   return (
-    <div>
+    <div className="page-comments">
       {commentStatus === "open" && <CreateComment contentId={contentId} />}
       <ul>
         {comments.nodes.map(node => (

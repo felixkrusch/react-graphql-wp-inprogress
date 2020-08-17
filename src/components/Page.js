@@ -101,8 +101,8 @@ const Page = () => {
   };
 
   return (
-    <div>
-      <h3>{page && page.title}</h3>
+    <div className="page">
+      <h3 className="title">{page && page.title}</h3>
       <div>{page.date}</div>
 
       <div onClick={handleClick}>
@@ -122,7 +122,7 @@ const Page = () => {
 export const Author = ({ author, link }) => {
   const avatar = author.avatar;
   return (
-    <div>
+    <div className="page-author">
       <h3>About Author</h3>
       {author.description && (
         <div>
@@ -138,7 +138,7 @@ export const Author = ({ author, link }) => {
 
 const Tags = ({ tags }) => {
   return (
-    <div>
+    <div className="page-tags">
       <h3>Tags</h3>
       {tags.nodes.map(tag => (
         <div key={tag.id}>
@@ -150,7 +150,7 @@ const Tags = ({ tags }) => {
 };
 const Categories = ({ categories }) => {
   return (
-    <div>
+    <div className="page-categories">
       <h3>Categories</h3>
       {categories.nodes.map(category => (
         <div key={category.id}>

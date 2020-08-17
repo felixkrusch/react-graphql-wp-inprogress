@@ -60,8 +60,8 @@ const Category = () => {
   if (error) return <p>Something wrong happened!</p>;
   const { category } = data;
   return (
-    <div>
-      <h3>{category.name}</h3>
+    <div className="categories">
+      <h3 className="title">{category.name}</h3>
       <div>{category.description}</div>
       <Pagination
         fetchMore={fetchMore}
@@ -73,7 +73,7 @@ const Category = () => {
         {category.posts.nodes.map(({ title, date, link, databaseId }) => {
           const urlObj = getUrl(link);
           return (
-            <li key={databaseId}>
+            <li className="category" key={databaseId}>
               <Link to={urlObj.url}>{title}</Link>
               <div>Date: {date}</div>
               <br />

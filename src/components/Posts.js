@@ -118,7 +118,7 @@ const Posts = () => {
   const { nodes } = posts;
   const stickeyPostIds = stickyPosts.nodes.map(({ databaseId }) => databaseId);
   return (
-    <div>
+    <div className="posts">
       <Pagination
         fetchMore={fetchMore}
         posts={posts}
@@ -131,7 +131,7 @@ const Posts = () => {
       {nodes
         .filter(({ databaseId }) => !stickeyPostIds.includes(databaseId))
         .map(({ databaseId, title, slug }) => (
-          <div key={databaseId}>
+          <div className="post" key={databaseId}>
             <h3>
               <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
             </h3>
