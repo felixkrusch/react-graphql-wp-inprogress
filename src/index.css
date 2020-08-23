@@ -38,3 +38,8 @@ code {
 .colorhdfonthover {
   color: var(--colorhdfonthover);
 }
+
+img {
+  max-width: 100%;
+  height: auto;
+}

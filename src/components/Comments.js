@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
+import Loading from "./Loading/Loading";
 
 //comment query updated
 
@@ -99,7 +100,7 @@ const Comment = ({ node: { id }, contentId, level }) => {
   const { loading, error, data } = useQuery(COMMET_QUERY, {
     variables: { id }
   });
-  if (loading) return <p>Loading Comments Content...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
   const { title, content, replies, date, author } = data.comment;
 
@@ -147,7 +148,7 @@ const Comments = ({ contentId, commentStatus }) => {
   const { loading, error, data } = useQuery(COMMETS_QUERY, {
     variables: { contentId }
   });
-  if (loading) return <p>Loading Comments Content...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
 
   const comments = data.comments;
@@ -186,7 +187,7 @@ const CreateComment = ({ contentId, parentId }) => {
       }
     });
   };
-  // if (loading) return <p>Loading creating Comments Content...</p>;
+  // if (loading) return <Loading />;
   // if (error) return <p>Something wrong happened in comments!</p>;
 
   return (

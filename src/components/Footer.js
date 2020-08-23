@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { baseUrl } from "../wpconfig";
 import ReactHtmlParser from "react-html-parser";
 import { replaceUrl } from "./Page";
-import { Menus } from "./Header";
+import { Menus } from "./MuiDrawer/Header/Header";
+import Loading from "./Loading/Loading";
 
 const FOOTER_QUERY = gql`
   query BlockAreas {
@@ -15,6 +16,9 @@ const FOOTER_QUERY = gql`
         content
         slug
       }
+    }
+    getCustomizations {
+      copyright
     }
     menuItems(first: 100, where: { location: FOOTER }) {
       nodes {
@@ -40,9 +44,9 @@ const Footer = () => {
     fetchPolicy: "no-cache"
   });
   const { loading, error, data } = menuApi;
-  if (loading) return <p>Loading Footer...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Ooops!</p>;
-  const { blockAreas, menuItems } = data;
+  const { blockAreas, menuItems, getCustomizations } = data;
   return (
     <div>
       <h3>Footer block</h3>
@@ -52,7 +56,9 @@ const Footer = () => {
           <div key={databaseId}>{ReactHtmlParser(replaceUrl(content))}</div>
         ))}
       <Menus menus={menuItems.nodes} />
-      <p>Copyright © 2020 . All rights reserved.</p>
+      <p>
+        Copyright © 2020 {getCustomizations.copyright} . All rights reserved.
+      </p>
     </div>
   );
 };

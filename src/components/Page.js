@@ -5,27 +5,34 @@ import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
 import Comments from "./Comments";
 import { baseUrl } from "../wpconfig";
+import { Helmet } from "react-helmet";
+import Loading from "./Loading/Loading";
 
 const PAGE_QUERY = gql`
   query Page($id: ID!) {
+    allSettings {
+      generalSettingsTitle
+    }
     page(id: $id, idType: URI) {
       databaseId
       title
       content
       commentStatus
       date
+      # excerpt
       template {
         ... on FullWidthTemplate {
           templateName
         }
       }
     }
+
     post(id: $id, idType: SLUG) {
       databaseId
       title(format: RENDERED)
       content(format: RENDERED)
       commentStatus
-
+      excerpt
       template {
         ... on FullWidthTemplate {
           templateName
@@ -64,14 +71,14 @@ const Page = () => {
   const history = useHistory();
   // creating complete slug path
   const path = `${slug}/${slugChild ? slugChild : ""}`;
-  const { loading, error, data } = useQuery(PAGE_QUERY, {
-    variables: { id: path }
+  const { loading, error, data, refetch } = useQuery(PAGE_QUERY, {
+    variables: { id: path, search: "" }
   });
-  if (loading) return <p>Loading Page Content...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
-  console.log(data);
   // destructuring data
   const page = data.page || data.post;
+  const { allSettings } = data;
   const handleClick = e => {
     const { target } = e;
     const hasParentAnchor = target.parentElement.tagName === "A";
@@ -102,11 +109,23 @@ const Page = () => {
 
   return (
     <div className="page">
-      <h3 className="title">{page && page.title}</h3>
+      <Helmet>
+        <title>
+          {page.title} - {allSettings.generalSettingsTitle}
+        </title>
+        <meta name="description" content={page.excerpt} />
+        {page.tags && (
+          <meta
+            name="keywords"
+            content={`${page.tags.nodes.map(({ name }) => name)}`}
+          />
+        )}
+      </Helmet>
+      <h3 className="title">{page.title}</h3>
       <div>{page.date}</div>
 
       <div onClick={handleClick}>
-        {ReactHtmlParser(replaceUrl(page && page.content))}
+        {ReactHtmlParser(replaceUrl(page.content))}
       </div>
       {page.author && <Author author={page.author.node} link />}
       {page.tags && <Tags tags={page.tags} />}

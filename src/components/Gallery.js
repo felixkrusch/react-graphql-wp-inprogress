@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ReactHtmlParser from "react-html-parser";
 import queryString from "query-string";
+import Loading from "./Loading/Loading";
 
 //pages query updated
 const GALLERY_QUERY = gql`
@@ -32,7 +33,7 @@ const Gallery = () => {
     const ids = window.atob(i);
     setIds(ids.split(","));
   }, [location.search]);
-  if (loading) return <p>Loading Gallery Content...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
   // destructuring data
   const handleNext = () => {

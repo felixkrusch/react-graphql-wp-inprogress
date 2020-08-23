@@ -2,9 +2,11 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { getUrl } from "./Header";
+import { getUrl } from "./MuiDrawer/Header/Header";
 import { Pagination } from "./Posts";
 import { usePostQuery } from "./usePostQuery";
+import { Helmet } from "react-helmet";
+import Loading from "./Loading/Loading";
 
 //post query updated
 const TAG_QUERY = gql`
@@ -16,6 +18,9 @@ const TAG_QUERY = gql`
     $before: String
     $tag: String
   ) {
+    allSettings {
+      generalSettingsTitle
+    }
     tag(id: $id, idType: SLUG) {
       id
       description
@@ -58,24 +63,17 @@ const Tag = () => {
     query: tagQuery,
     variables: { id: slug, tag: slug }
   });
-  console.log("tag page", data);
-  // const { slug } = useParams();
-  // const variables = {
-  //   first: 10,
-  //   last: null,
-  //   after: null,
-  //   before: null,
-  //   id: slug
-  // };
-  // const { loading, error, data, fetchMore } = useQuery(TAG_QUERY, {
-  //   variables
-  // });
-  if (loading) return <p>Loading Tag Content...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
-  const { tag } = data;
-  console.log(tag);
+  const { tag, allSettings } = data;
   return (
     <div>
+      <Helmet>
+        <title>
+          {tag.name} - {allSettings.generalSettingsTitle}
+        </title>
+        <meta name="description" content={tag.description} />
+      </Helmet>
       <h3>Name: {tag.name}</h3>
       <div>{tag.description}</div>
       <Pagination

@@ -2,26 +2,63 @@
   "__schema": {
     "types": [
       {
+        "kind": "OBJECT",
+        "name": "RootQuery",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Settings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "String",
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Int",
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Boolean",
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "ID",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "BlockAreaIdType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "BlockArea",
+        "possibleTypes": null
+      },
+      {
         "kind": "INTERFACE",
         "name": "Node",
         "possibleTypes": [
           {
-            "name": "Category"
-          },
-          {
-            "name": "EnqueuedScript"
-          },
-          {
-            "name": "EnqueuedStylesheet"
-          },
-          {
-            "name": "Post"
+            "name": "BlockArea"
           },
           {
             "name": "User"
           },
           {
             "name": "Comment"
+          },
+          {
+            "name": "EnqueuedScript"
+          },
+          {
+            "name": "EnqueuedStylesheet"
           },
           {
             "name": "MediaItem"
@@ -36,13 +73,19 @@
             "name": "Page"
           },
           {
-            "name": "UserRole"
+            "name": "Post"
+          },
+          {
+            "name": "Category"
           },
           {
             "name": "PostFormat"
           },
           {
             "name": "Tag"
+          },
+          {
+            "name": "UserRole"
           },
           {
             "name": "Menu"
@@ -60,8 +103,51 @@
       },
       {
         "kind": "INTERFACE",
-        "name": "TermNode",
+        "name": "ContentNode",
         "possibleTypes": [
+          {
+            "name": "BlockArea"
+          },
+          {
+            "name": "MediaItem"
+          },
+          {
+            "name": "Page"
+          },
+          {
+            "name": "Post"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToEditLockConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "User",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "UniformResourceIdentifiable",
+        "possibleTypes": [
+          {
+            "name": "BlockArea"
+          },
+          {
+            "name": "User"
+          },
+          {
+            "name": "MediaItem"
+          },
+          {
+            "name": "Page"
+          },
+          {
+            "name": "Post"
+          },
           {
             "name": "Category"
           },
@@ -72,6 +158,125 @@
             "name": "Tag"
           }
         ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "Commenter",
+        "possibleTypes": [
+          {
+            "name": "User"
+          }
+        ]
+      },
+      {
+        "kind": "ENUM",
+        "name": "AvatarRatingEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Avatar",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserToCommentConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PostStatusEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ContentTypeEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "OrderEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "CommentsConnectionOrderbyEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToCommentConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToCommentConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Comment",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CommentToCommenterConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CommentToContentNodeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PostObjectFieldFormatEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CommentToParentCommentConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CommentToParentCommentConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CommentToCommentConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CommentToCommentConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CommentToCommentConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "WPPageInfo",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToEnqueuedScriptConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToEnqueuedScriptConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "EnqueuedScript",
+        "possibleTypes": null
       },
       {
         "kind": "INTERFACE",
@@ -86,77 +291,90 @@
         ]
       },
       {
-        "kind": "INTERFACE",
-        "name": "UniformResourceIdentifiable",
-        "possibleTypes": [
-          {
-            "name": "Category"
-          },
-          {
-            "name": "Post"
-          },
-          {
-            "name": "User"
-          },
-          {
-            "name": "MediaItem"
-          },
-          {
-            "name": "Page"
-          },
-          {
-            "name": "PostFormat"
-          },
-          {
-            "name": "Tag"
-          }
-        ]
+        "kind": "OBJECT",
+        "name": "UserToEnqueuedStylesheetConnection",
+        "possibleTypes": null
       },
       {
-        "kind": "INTERFACE",
-        "name": "HierarchicalTermNode",
-        "possibleTypes": [
-          {
-            "name": "Category"
-          }
-        ]
+        "kind": "OBJECT",
+        "name": "UserToEnqueuedStylesheetConnectionEdge",
+        "possibleTypes": null
       },
       {
-        "kind": "INTERFACE",
-        "name": "ContentNode",
-        "possibleTypes": [
-          {
-            "name": "Post"
-          },
-          {
-            "name": "MediaItem"
-          },
-          {
-            "name": "Page"
-          }
-        ]
+        "kind": "OBJECT",
+        "name": "EnqueuedStylesheet",
+        "possibleTypes": null
       },
       {
-        "kind": "INTERFACE",
-        "name": "Commenter",
-        "possibleTypes": [
-          {
-            "name": "User"
-          }
-        ]
+        "kind": "INPUT_OBJECT",
+        "name": "UserToMediaItemConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DateQueryInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DateInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PostObjectsConnectionDateColumnEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "RelationEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MimeTypeEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostObjectsConnectionOrderbyInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PostObjectsConnectionOrderbyEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToMediaItemConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToMediaItemConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MediaItem",
+        "possibleTypes": null
       },
       {
         "kind": "INTERFACE",
         "name": "NodeWithTitle",
         "possibleTypes": [
           {
-            "name": "Post"
+            "name": "BlockArea"
           },
           {
             "name": "MediaItem"
           },
           {
             "name": "Page"
+          },
+          {
+            "name": "Post"
           }
         ]
       },
@@ -165,28 +383,33 @@
         "name": "NodeWithAuthor",
         "possibleTypes": [
           {
-            "name": "Post"
-          },
-          {
             "name": "MediaItem"
           },
           {
             "name": "Page"
+          },
+          {
+            "name": "Post"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NodeWithAuthorToUserConnectionEdge",
+        "possibleTypes": null
       },
       {
         "kind": "INTERFACE",
         "name": "NodeWithComments",
         "possibleTypes": [
           {
-            "name": "Post"
-          },
-          {
             "name": "MediaItem"
           },
           {
             "name": "Page"
+          },
+          {
+            "name": "Post"
           }
         ]
       },
@@ -195,12 +418,145 @@
         "name": "HierarchicalContentNode",
         "possibleTypes": [
           {
+            "name": "BlockArea"
+          },
+          {
             "name": "MediaItem"
           },
           {
             "name": "Page"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HierarchicalContentNodeToContentNodeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HierarchicalContentNodeToContentNodeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "MediaItemToCommentConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MediaItemToCommentConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MediaItemToCommentConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MediaItemToContentTypeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentTypeToTaxonomyConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentTypeToTaxonomyConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Taxonomy",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TaxonomyToContentTypeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TaxonomyToContentTypeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ContentTypeToContentNodeConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentTypeToContentNodeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentTypeToContentNodeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostTypeLabelDetails",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToEnqueuedScriptConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToEnqueuedScriptConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToEnqueuedStylesheetConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToEnqueuedStylesheetConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToEditLastConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MediaDetails",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MediaItemMeta",
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Float",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MediaSize",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MediaItemSizeEnum",
+        "possibleTypes": null
       },
       {
         "kind": "UNION",
@@ -216,6 +572,12 @@
             "name": "BlankCanvasTemplate"
           },
           {
+            "name": "FullWidthTemplate"
+          },
+          {
+            "name": "GalleryTemplate"
+          },
+          {
             "name": "LeftColumnTemplate"
           },
           {
@@ -223,8 +585,19 @@
           },
           {
             "name": "FullWidthShortTemplate"
+          },
+          {
+            "name": "FooterBlockAreaTemplate"
+          },
+          {
+            "name": "HeaderBlockAreaTemplate"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DefaultTemplate",
+        "possibleTypes": null
       },
       {
         "kind": "INTERFACE",
@@ -240,6 +613,12 @@
             "name": "BlankCanvasTemplate"
           },
           {
+            "name": "FullWidthTemplate"
+          },
+          {
+            "name": "GalleryTemplate"
+          },
+          {
             "name": "LeftColumnTemplate"
           },
           {
@@ -247,18 +626,152 @@
           },
           {
             "name": "FullWidthShortTemplate"
+          },
+          {
+            "name": "FooterBlockAreaTemplate"
+          },
+          {
+            "name": "HeaderBlockAreaTemplate"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "AboutTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "BlankCanvasTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FullWidthTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GalleryTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "LeftColumnTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RightColumnTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FullWidthShortTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "FooterBlockAreaTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "HeaderBlockAreaTemplate",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ContentNodeToTermNodeConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "TermObjectsConnectionOrderbyEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "TaxonomyEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToTermNodeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ContentNodeToTermNodeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "TermNode",
+        "possibleTypes": [
+          {
+            "name": "Category"
+          },
+          {
+            "name": "PostFormat"
+          },
+          {
+            "name": "Tag"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TermNodeToEnqueuedScriptConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TermNodeToEnqueuedScriptConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TermNodeToEnqueuedStylesheetConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TermNodeToEnqueuedStylesheetConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserToPageConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToPageConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToPageConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Page",
+        "possibleTypes": null
       },
       {
         "kind": "INTERFACE",
         "name": "NodeWithContentEditor",
         "possibleTypes": [
           {
-            "name": "Post"
+            "name": "BlockArea"
           },
           {
             "name": "Page"
+          },
+          {
+            "name": "Post"
           }
         ]
       },
@@ -267,22 +780,27 @@
         "name": "NodeWithFeaturedImage",
         "possibleTypes": [
           {
-            "name": "Post"
+            "name": "Page"
           },
           {
-            "name": "Page"
+            "name": "Post"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NodeWithFeaturedImageToMediaItemConnectionEdge",
+        "possibleTypes": null
       },
       {
         "kind": "INTERFACE",
         "name": "NodeWithExcerpt",
         "possibleTypes": [
           {
-            "name": "Post"
+            "name": "Page"
           },
           {
-            "name": "Page"
+            "name": "Post"
           }
         ]
       },
@@ -291,12 +809,17 @@
         "name": "NodeWithRevisions",
         "possibleTypes": [
           {
-            "name": "Post"
+            "name": "Page"
           },
           {
-            "name": "Page"
+            "name": "Post"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "NodeWithRevisionsToContentNodeConnectionEdge",
+        "possibleTypes": null
       },
       {
         "kind": "INTERFACE",
@@ -306,6 +829,279 @@
             "name": "Page"
           }
         ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PageToCommentConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PageToCommentConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PageToCommentConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PageToContentTypeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PageToPreviewConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PageToRevisionConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PageToRevisionConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PageToRevisionConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserToPostConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToPostConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToPostConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Post",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "NodeWithTrackbacks",
+        "possibleTypes": [
+          {
+            "name": "Post"
+          }
+        ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostToCategoryConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToCategoryConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToCategoryConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Category",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "HierarchicalTermNode",
+        "possibleTypes": [
+          {
+            "name": "Category"
+          }
+        ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CategoryToCategoryConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CategoryToCategoryConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CategoryToCategoryConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CategoryToParentCategoryConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CategoryToPostConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CategoryToPostConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CategoryToPostConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CategoryToTaxonomyConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostToCommentConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToCommentConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToCommentConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToContentTypeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostToPostFormatConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToPostFormatConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToPostFormatConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostFormat",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostFormatToPostConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostFormatToPostConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostFormatToPostConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostFormatToTaxonomyConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToPreviewConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostToRevisionConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToRevisionConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToRevisionConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostToTagConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToTagConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "PostToTagConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Tag",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "TagToPostConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TagToPostConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TagToPostConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TagToTaxonomyConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UserToContentRevisionUnionConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToContentRevisionUnionConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToContentRevisionUnionConnectionEdge",
+        "possibleTypes": null
       },
       {
         "kind": "UNION",
@@ -320,13 +1116,194 @@
         ]
       },
       {
-        "kind": "INTERFACE",
-        "name": "NodeWithTrackbacks",
-        "possibleTypes": [
-          {
-            "name": "Post"
-          }
-        ]
+        "kind": "OBJECT",
+        "name": "UserToUserRoleConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserToUserRoleConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UserRole",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "BlockAreaToContentTypeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "BlockAreaToPreviewConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToBlockAreaConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToBlockAreaConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToBlockAreaConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToCategoryConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToCategoryConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToCategoryConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "CategoryIdType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToCommentConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToCommentConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToCommentConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ContentNodeIdTypeEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToContentNodeConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToContentNodeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToContentNodeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "ContentTypeIdTypeEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToContentTypeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToContentTypeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DiscussionSettings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GeneralSettings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Site Customization",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MediaItemIdType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToMediaItemConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToMediaItemConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToMediaItemConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Menu",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "MenuToMenuItemConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MenuLocationEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MenuToMenuItemConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MenuToMenuItemConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MenuItem",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "MenuItemToMenuItemConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MenuItemToMenuItemConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "MenuItemToMenuItemConnectionEdge",
+        "possibleTypes": null
       },
       {
         "kind": "UNION",
@@ -348,6 +1325,671 @@
             "name": "MenuItem"
           }
         ]
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToMenuItemConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToMenuItemConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToMenuItemConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToMenuConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToMenuConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToMenuConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PageIdType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToPageConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPageConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPageConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Plugin",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPluginConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPluginConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PostIdType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "PostFormatIdType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToPostFormatConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPostFormatConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPostFormatConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToPostConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPostConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToPostConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ReadingSettings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToEnqueuedScriptConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToEnqueuedScriptConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToEnqueuedStylesheetConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToEnqueuedStylesheetConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToContentRevisionUnionConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToContentRevisionUnionConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToContentRevisionUnionConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "TagIdType",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToTagConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToTagConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToTagConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToTaxonomyConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToTaxonomyConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "TaxonomyIdTypeEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "TermNodeIdTypeEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToTermNodeConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToTermNodeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToTermNodeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "Theme",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToThemeConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToThemeConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "UserNodeIdTypeEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToUserRoleConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToUserRoleConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RootQueryToUserConnectionWhereArgs",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UsersConnectionOrderbyInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "UsersConnectionOrderbyEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "UserRoleEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToUserConnection",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootQueryToUserConnectionEdge",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "WritingSettings",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RootMutation",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateCategoryInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateCategoryPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdatePostFormatInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdatePostFormatPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateTagInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateTagPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateBlockAreaInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateBlockAreaPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateCategoryInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateCategoryPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateCommentInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateCommentPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateMediaItemInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "MediaItemStatusEnum",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateMediaItemPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreatePageInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreatePagePayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreatePostInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostCategoriesInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostCategoriesNodeInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostPostFormatsInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostPostFormatsNodeInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostTagsInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "PostTagsNodeInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreatePostPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreatePostFormatInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreatePostFormatPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateTagInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateTagPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "CreateUserInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CreateUserPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteBlockAreaInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteBlockAreaPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteCategoryInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteCategoryPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteCommentInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteCommentPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteMediaItemInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteMediaItemPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeletePageInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeletePagePayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeletePostInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeletePostPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeletePostFormatInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeletePostFormatPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteTagInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteTagPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "DeleteUserInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "DeleteUserPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RegisterUserInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RegisterUserPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "ResetUserPasswordInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ResetUserPasswordPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "RestoreCommentInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "RestoreCommentPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "SendPasswordResetEmailInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "SendPasswordResetEmailPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateBlockAreaInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateBlockAreaPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateCommentInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateCommentPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateMediaItemInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateMediaItemPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdatePageInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdatePagePayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdatePostInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdatePostPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateSettingsInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateSettingsPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "INPUT_OBJECT",
+        "name": "UpdateUserInput",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "UpdateUserPayload",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__Schema",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__Type",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "__TypeKind",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__Field",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__InputValue",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__EnumValue",
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "__Directive",
+        "possibleTypes": null
+      },
+      {
+        "kind": "ENUM",
+        "name": "__DirectiveLocation",
+        "possibleTypes": null
       }
     ]
   }

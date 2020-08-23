@@ -2,9 +2,11 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useLazyQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { getUrl } from "./Header";
+import { getUrl } from "./MuiDrawer/Header/Header";
 import { Pagination } from "./Posts";
 import { usePostQuery } from "./usePostQuery";
+import { Helmet } from "react-helmet";
+import Loading from "./Loading/Loading";
 //post query updated
 const CATEGORY_QUERY = gql`
   query Category(
@@ -15,6 +17,9 @@ const CATEGORY_QUERY = gql`
     $before: String
     $categoryName: String
   ) {
+    allSettings {
+      generalSettingsTitle
+    }
     category(id: $id, idType: SLUG) {
       name
       description
@@ -56,11 +61,17 @@ const Category = () => {
     variables: { id: slug, categoryName: slug }
   });
 
-  if (loading) return <p>Loading Post Content...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
-  const { category } = data;
+  const { category, allSettings } = data;
   return (
     <div className="categories">
+      <Helmet>
+        <title>
+          {category.name} - {allSettings.generalSettingsTitle}
+        </title>
+        <meta name="description" content={category.description} />
+      </Helmet>
       <h3 className="title">{category.name}</h3>
       <div>{category.description}</div>
       <Pagination

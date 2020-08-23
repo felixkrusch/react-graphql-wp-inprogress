@@ -7,6 +7,7 @@ import { Pagination } from "./Posts";
 import { Author } from "./Page";
 import { usePostQuery } from "./usePostQuery";
 import { baseUrl } from "../wpconfig";
+import Loading from "./Loading/Loading";
 
 //post query updated
 const AUTHOR_QUERY = gql`
@@ -65,7 +66,7 @@ const AuthorArchive = () => {
     variables: { authorName: slug, userId: slug }
   });
 
-  if (loading) return <p>Loading Author Content...</p>;
+  if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
   const posts = data.posts;
   const user = data.user;
@@ -73,7 +74,6 @@ const AuthorArchive = () => {
     <div>
       <Author author={user} />
       <ul>
-        {console.log(posts)}
         {posts.nodes.map(post => (
           <li key={post.databaseId}>
             <h3>
