@@ -67,10 +67,11 @@ const Category = () => {
   return (
     <div className="categories">
       <Helmet>
-        <title>
-          {category.name} - {allSettings.generalSettingsTitle}
-        </title>
-        <meta name="description" content={category.description} />
+        <meta
+          property="og:title"
+          content={`${category.name} - ${allSettings.generalSettingsTitle}`}
+        />
+        <meta property="og:description" content={category.description} />
       </Helmet>
       <h3 className="title">{category.name}</h3>
       <div>{category.description}</div>

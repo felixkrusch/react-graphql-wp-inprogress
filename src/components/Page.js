@@ -66,14 +66,15 @@ const PAGE_QUERY = gql`
 export const replaceUrl = url => {
   return url.replace(new RegExp(`href="${baseUrl}`, "g"), `href="`);
 };
-const Page = () => {
+const Page = ({ onHeadUpdate }) => {
   const { slug, slugChild } = useParams();
   const history = useHistory();
   // creating complete slug path
   const path = `${slug}/${slugChild ? slugChild : ""}`;
-  const { loading, error, data, refetch } = useQuery(PAGE_QUERY, {
+  const { loading, error, data } = useQuery(PAGE_QUERY, {
     variables: { id: path, search: "" }
   });
+
   if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
   // destructuring data
@@ -110,10 +111,11 @@ const Page = () => {
   return (
     <div className="page">
       <Helmet>
-        <title>
-          {page.title} - {allSettings.generalSettingsTitle}
-        </title>
-        <meta name="description" content={page.excerpt} />
+        <meta
+          property="og:title"
+          content={`${page.title} - ${allSettings.generalSettingsTitle}`}
+        />
+        <meta property="og:description" content={page.excerpt} />
         {page.tags && (
           <meta
             name="keywords"

@@ -1,10 +1,15 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, LinearProgress } from "@material-ui/core";
 const useStyles = makeStyles(theme => ({
   root: {
-    display: "flex",
-    width: "100%"
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    // display: "flex",
+    width: "100%",
+    zIndex: 10000
     // "justify-content": "center;"
   }
 }));
@@ -13,7 +18,7 @@ const Loading = ({ color }) => {
 
   return (
     <div className={classes.root}>
-      <CircularProgress color={color || "inherit"} />
+      <LinearProgress color="primary" />
     </div>
   );
 };

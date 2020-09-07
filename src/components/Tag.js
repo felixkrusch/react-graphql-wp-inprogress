@@ -69,10 +69,11 @@ const Tag = () => {
   return (
     <div>
       <Helmet>
-        <title>
-          {tag.name} - {allSettings.generalSettingsTitle}
-        </title>
-        <meta name="description" content={tag.description} />
+        <meta
+          property="og:title"
+          content={`${tag.name} - ${allSettings.generalSettingsTitle}`}
+        />
+        <meta property="og:description" content={tag.description} />
       </Helmet>
       <h3>Name: {tag.name}</h3>
       <div>{tag.description}</div>

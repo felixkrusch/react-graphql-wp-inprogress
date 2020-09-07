@@ -3,15 +3,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { baseUrl } from "../../../wpconfig";
 import classnames from "classnames";
-import {
-  List,
-  ListItemText,
-  Button,
-  MenuItem,
-  Menu,
-  FormControlLabel,
-  Switch
-} from "@material-ui/core";
+import { List, ListItemText, Button, MenuItem, Menu } from "@material-ui/core";
 import LinkButton from "../../Button/LinkButton";
 import "./header.scss";
 import Loading from "../../Loading/Loading";
@@ -27,8 +19,6 @@ const MENU_QUERY = gql`
       colorhdfont
       customcss
       colorhdfonthover
-      copyright
-      frontpagedescription
     }
     allSettings {
       generalSettingsDescription
@@ -39,11 +29,6 @@ const MENU_QUERY = gql`
         databaseId
         content
         slug
-        #  template {
-        #    ... on HeaderBlockAreaTemplate {
-        #      templateName
-        #    }
-        #  }
       }
     }
     menuItems(where: { location: PRIMARY }, first: 100) {
@@ -82,13 +67,12 @@ export const getUrl = url => {
   return { url };
 };
 
-const Header = ({ toggleDarkMode }) => {
+const Header = () => {
   const menuApi = useQuery(MENU_QUERY, {
     fetchPolicy: "no-cache"
   });
   const { loading, error, data } = menuApi;
   useHeader({ data });
-  // const { theme, toggleDarkMode } = useDarkMode();
 
   if (loading) return <Loading />;
   if (error) return <p>Ooops!</p>;
@@ -98,7 +82,6 @@ const Header = ({ toggleDarkMode }) => {
   const { getCustomizations, allSettings, iconMenuItems } = data;
   return (
     <div className="header">
-      {/* <FormControlLabel control={<Switch onClick={toggleDarkMode} />} /> */}
       {getCustomizations.logourl ? (
         <LinkButton to="/">
           <img
@@ -112,7 +95,9 @@ const Header = ({ toggleDarkMode }) => {
       ) : (
         <div>
           <LinkButton to="/">{allSettings.generalSettingsTitle}</LinkButton>
-          <ListItemText>{allSettings.generalSettingsDescription}</ListItemText>
+          <ListItemText className="link-btn">
+            {allSettings.generalSettingsDescription}
+          </ListItemText>
         </div>
       )}
       {/* {blockAreas.nodes
@@ -123,7 +108,6 @@ const Header = ({ toggleDarkMode }) => {
       <Menus menus={menus} />
       {/* <h3 className="testcustomcss">icon menus</h3> */}
       {/* <Menus menus={iconMenuItems.nodes} /> */}
-      <FormControlLabel control={<Switch onClick={toggleDarkMode} />} />
     </div>
   );
 };
@@ -159,6 +143,7 @@ const NavMenu = ({ menu: { label, url, childItems, cssClasses } }) => {
           target="_blank"
           rel="noopener noreferrer"
           href={urlObj.url}
+          fullWidth
         >
           <ListItemText>{label}</ListItemText>
         </Button>

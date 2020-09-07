@@ -1,6 +1,8 @@
 .header {
   display: flex;
+  flex-flow: column;
   .list-row {
+    flex-flow: column;
     display: flex;
   }
 

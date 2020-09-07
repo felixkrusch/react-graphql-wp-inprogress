@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import { useLazyQuery, useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import { Link } from "react-router-dom";
@@ -6,6 +6,20 @@ import ReactHtmlParser from "react-html-parser";
 import { usePostQuery } from "./usePostQuery";
 import Loading from "./Loading/Loading";
 import { Input, Button } from "@material-ui/core";
+
+const HEAD_QUERY = gql`
+  {
+    getCustomizations {
+      siteiconurl
+      frontpagedescription
+    }
+    allSettings {
+      generalSettingsDescription
+      generalSettingsTitle
+    }
+  }
+`;
+
 const STICKY_POSTS_QUERY = gql`
   query stickyPosts {
     stickyPosts: posts(where: { onlySticky: true }) {
@@ -116,14 +130,16 @@ const FeaturedSection = ({ stickyPosts }) => {
             alt={featuredImage && featuredImage.node.altText}
           />
         </div>
-        <div>{excerpt}</div>
+        <div>{ReactHtmlParser(excerpt)}</div>
       </div>
     )
   );
 };
-const Posts = () => {
+const Posts = ({ onHeadUpdate }) => {
   const [search, setSearch] = useState("");
   const postsQuery = useLazyQuery(POSTS_QUERY);
+
+  const { data: headData } = useQuery(HEAD_QUERY);
   const { data: stickeyPostData, loading: sLoading, error: sError } = useQuery(
     STICKY_POSTS_QUERY
   );
@@ -132,6 +148,10 @@ const Posts = () => {
     query: postsQuery,
     search
   });
+  useEffect(() => {
+    if (!headData) return;
+    onHeadUpdate(headData);
+  }, [headData]);
   if (loading || sLoading) return <Loading />;
   if (error || sError) return <p>Something wrong happened inside!</p>;
   const { stickyPosts } = stickeyPostData;
