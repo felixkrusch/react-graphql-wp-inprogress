@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useQuery } from "@apollo/client";
 import { baseUrl } from "../../../wpconfig";
 import classnames from "classnames";
 import { List, ListItemText, Button, MenuItem, Menu } from "@material-ui/core";
@@ -68,9 +67,7 @@ export const getUrl = url => {
 };
 
 const Header = () => {
-  const menuApi = useQuery(MENU_QUERY, {
-    fetchPolicy: "no-cache"
-  });
+  const menuApi = useQuery(MENU_QUERY);
   const { loading, error, data } = menuApi;
   useHeader({ data });
 

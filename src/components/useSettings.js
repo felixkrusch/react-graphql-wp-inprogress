@@ -1,5 +1,4 @@
-const { gql } = require("apollo-boost");
-const { useQuery } = require("@apollo/react-hooks");
+import { gql, useQuery } from "@apollo/client";
 
 const SETTING_QUERY = gql`
   {

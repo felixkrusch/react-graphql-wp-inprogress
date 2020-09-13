@@ -1,7 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-import { Link } from "react-router-dom";
+import { gql, useQuery } from "@apollo/client";
 import { baseUrl } from "../wpconfig";
 import ReactHtmlParser from "react-html-parser";
 import { replaceUrl } from "./Page";

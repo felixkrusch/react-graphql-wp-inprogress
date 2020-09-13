@@ -1,14 +1,9 @@
 import React from "react";
-import ApolloClient from "apollo-boost";
-import { ApolloProvider } from "@apollo/react-hooks";
-import {
-  InMemoryCache,
-  IntrospectionFragmentMatcher
-} from "apollo-cache-inmemory";
-import Routes from "./components/Routes";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
 import Config from "./wpconfig";
 import introspectionQueryResultData from "./fragmentTypes.json";
-import { ThemeProvider, FormControlLabel, Switch } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core";
 import MuiDrawer from "./components/MuiDrawer/MuiDrawer";
 import { BrowserRouter } from "react-router-dom";

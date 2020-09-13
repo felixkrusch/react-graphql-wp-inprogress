@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import queryString from "query-string";
 import Loading from "./Loading/Loading";

@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import Comments from "./Comments";
 import { baseUrl } from "../wpconfig";
@@ -20,6 +19,11 @@ const PAGE_QUERY = gql`
       commentStatus
       date
       # excerpt
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
       template {
         ... on FullWidthTemplate {
           templateName
@@ -36,6 +40,11 @@ const PAGE_QUERY = gql`
       template {
         ... on FullWidthTemplate {
           templateName
+        }
+      }
+      featuredImage {
+        node {
+          sourceUrl
         }
       }
       tags {
@@ -66,7 +75,7 @@ const PAGE_QUERY = gql`
 export const replaceUrl = url => {
   return url.replace(new RegExp(`href="${baseUrl}`, "g"), `href="`);
 };
-const Page = ({ onHeadUpdate }) => {
+const Page = () => {
   const { slug, slugChild } = useParams();
   const history = useHistory();
   // creating complete slug path
@@ -111,6 +120,10 @@ const Page = ({ onHeadUpdate }) => {
   return (
     <div className="page">
       <Helmet>
+        <title>
+          {page.title} - {allSettings.generalSettingsTitle}
+        </title>
+        <meta name="description" content={page.excerpt} />
         <meta
           property="og:title"
           content={`${page.title} - ${allSettings.generalSettingsTitle}`}
@@ -122,6 +135,16 @@ const Page = ({ onHeadUpdate }) => {
             content={`${page.tags.nodes.map(({ name }) => name)}`}
           />
         )}
+        <script type="application/ld+json">
+          {`{
+          "@context": "https://schema.org/",
+          "@type": "Website",
+          "name": "${page.title}",
+          "author": "${page.author?.node?.name}",
+          "image": ["${page.featuredImage?.node?.sourceUrl}"],
+          "description": "${page.excerpt}"
+        }`}
+        </script>
       </Helmet>
       <h3 className="title">{page.title}</h3>
       <div>{page.date}</div>
@@ -147,7 +170,7 @@ export const Author = ({ author, link }) => {
       <h3>About Author</h3>
       {author.description && (
         <div>
-          <img src={avatar.url} alt={"author picture"} />
+          <img src={avatar.url} alt={"author"} />
           <div>{author.name}</div>
           <div>{author.description}</div>
           {link && <Link to={author.uri}>More from this Author</Link>}

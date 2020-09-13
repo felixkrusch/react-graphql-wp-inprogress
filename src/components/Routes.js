@@ -10,15 +10,15 @@ import Footer from "./Footer";
 import Head from "./MuiDrawer/Header/Head";
 
 export default () => {
-  const [metaInfo, setMetaInfo] = useState({});
+  const [activePage, setActivePage] = useState("");
   return (
     <>
-      <Head metaInfo={metaInfo} />
+      {activePage === "posts" && <Head />}
       <Switch>
         <Route
           exact
           path="/"
-          component={() => <Posts onHeadUpdate={setMetaInfo} />}
+          component={() => <Posts onActivePage={setActivePage} />}
         />
         <Route path="/author/:slug?" component={AuthorArchive} />
         <Route path="/tag/:slug?" component={Tag} />

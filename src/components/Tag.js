@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { useLazyQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useLazyQuery } from "@apollo/client";
 import { getUrl } from "./MuiDrawer/Header/Header";
 import { Pagination } from "./Posts";
 import { usePostQuery } from "./usePostQuery";
@@ -69,11 +68,23 @@ const Tag = () => {
   return (
     <div>
       <Helmet>
+        <title>
+          {tag.name} - {allSettings.generalSettingsTitle}
+        </title>
+        <meta name="description" content={tag.description} />
         <meta
           property="og:title"
           content={`${tag.name} - ${allSettings.generalSettingsTitle}`}
         />
         <meta property="og:description" content={tag.description} />
+        <script type="application/ld+json">
+          {`{
+          "@context": "https://schema.org/",
+          "@type": "CollectionPage",
+          "name": "${tag.name}",
+          "description": "${tag.description}"
+        }`}
+        </script>
       </Helmet>
       <h3>Name: {tag.name}</h3>
       <div>{tag.description}</div>

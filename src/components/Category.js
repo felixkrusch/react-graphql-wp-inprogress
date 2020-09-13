@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { useLazyQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useLazyQuery } from "@apollo/client";
 import { getUrl } from "./MuiDrawer/Header/Header";
 import { Pagination } from "./Posts";
 import { usePostQuery } from "./usePostQuery";
@@ -67,11 +66,23 @@ const Category = () => {
   return (
     <div className="categories">
       <Helmet>
+        <title>
+          {category.name} - {allSettings.generalSettingsTitle}
+        </title>
+        <meta name="description" content={category.description} />
         <meta
           property="og:title"
           content={`${category.name} - ${allSettings.generalSettingsTitle}`}
         />
         <meta property="og:description" content={category.description} />
+        <script type="application/ld+json">
+          {`{
+          "@context": "https://schema.org/",
+          "@type": "CollectionPage",
+          "name": "${category.name}",
+          "description": "${category.description}"
+        }`}
+        </script>
       </Helmet>
       <h3 className="title">{category.name}</h3>
       <div>{category.description}</div>

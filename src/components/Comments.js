@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useQuery, useMutation } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import Loading from "./Loading/Loading";
+import { TextField, Button } from "@material-ui/core";
 
 //comment query updated
 
@@ -123,7 +123,15 @@ const Comment = ({ node: { id }, contentId, level }) => {
 
       <a href={authorUrl ? authorUrl : null}>{node.name}</a>
       <br />
-      {level < 5 && <button onClick={() => setIsReply(true)}>Reply</button>}
+      {level < 5 && (
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setIsReply(true)}
+        >
+          Reply
+        </Button>
+      )}
       {isReply && <CreateComment contentId={contentId} parentId={id} />}
       <div>{title}</div>
       <div>{date}</div>
@@ -199,18 +207,23 @@ const CreateComment = ({ contentId, parentId }) => {
         Required fields are marked <span className="required">*</span>
       </p>
       <p className="comment-form-comment">
-        <textarea
+        <TextField
+          variant="outlined"
+          fullWidth
           placeholder="* Message"
           rows="8"
+          multiline
           value={message}
           aria-required="true"
           onChange={({ target: { value } }) => setMessage(value)}
-        ></textarea>
+        ></TextField>
       </p>
       <div className="comment-form-column-wrapper">
         <p className="comment-form-author comment-form-column">
-          <input
+          <TextField
             placeholder="* Name"
+            fullWidth
+            variant="outlined"
             type="text"
             value={name}
             aria-required="true"
@@ -218,8 +231,10 @@ const CreateComment = ({ contentId, parentId }) => {
           />
         </p>
         <p className="comment-form-email comment-form-column">
-          <input
+          <TextField
             placeholder="* Email"
+            fullWidth
+            variant="outlined"
             type="text"
             value={email}
             aria-required="true"
@@ -227,7 +242,9 @@ const CreateComment = ({ contentId, parentId }) => {
           />
         </p>
         <p className="comment-form-url comment-form-column">
-          <input
+          <TextField
+            variant="outlined"
+            fullWidth
             value={url}
             placeholder="Website"
             type="text"
@@ -236,9 +253,14 @@ const CreateComment = ({ contentId, parentId }) => {
         </p>
       </div>
       <p className="form-submit">
-        <button className="submit" onClick={handleSubmit}>
+        <Button
+          color="primary"
+          variant="contained"
+          className="submit"
+          onClick={handleSubmit}
+        >
           Submit Comment
-        </button>
+        </Button>
       </p>
       {data && (
         <p style={{ color: "red" }}>Your comment is awaiting moderation.</p>

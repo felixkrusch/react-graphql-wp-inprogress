@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import { useLazyQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { gql, useLazyQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import { Pagination } from "./Posts";
 import { Author } from "./Page";
