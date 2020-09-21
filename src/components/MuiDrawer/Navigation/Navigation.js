@@ -7,29 +7,27 @@ import LinkButton from "../../Button/LinkButton";
 import "./header.scss";
 import Loading from "../../Loading/Loading";
 import useHeader from "./useHeader";
+import { Helmet } from "react-helmet";
 const MENU_QUERY = gql`
   query Menus {
     getCustomizations {
       leadcolor1
-      logourl
-      # siteiconurl
+      # logourl
       colorfontbuttons
       colorhd
       colorhdfont
       customcss
       colorhdfonthover
+      siteiconurl
     }
-    allSettings {
-      generalSettingsDescription
-      generalSettingsTitle
-    }
-    blockAreas {
-      nodes {
-        databaseId
-        content
-        slug
-      }
-    }
+
+    # blockAreas {
+    #   nodes {
+    #     databaseId
+    #     content
+    #     slug
+    #   }
+    # }
     menuItems(where: { location: PRIMARY }, first: 100) {
       nodes {
         id
@@ -46,16 +44,16 @@ const MENU_QUERY = gql`
         }
       }
     }
-    iconMenuItems: menuItems(first: 100, where: { location: ICONMENU }) {
-      nodes {
-        id
-        parentId
-        label
-        cssClasses
-        url
-        target
-      }
-    }
+    # iconMenuItems: menuItems(first: 100, where: { location: ICONMENU }) {
+    #   nodes {
+    #     id
+    #     parentId
+    #     label
+    #     cssClasses
+    #     url
+    #     target
+    #   }
+    # }
   }
 `;
 export const getUrl = url => {
@@ -75,11 +73,18 @@ const Header = () => {
   if (error) return <p>Ooops!</p>;
   const menus = data.menuItems.nodes.filter(n => !n.parentId);
 
-  const blockAreas = data.blockAreas;
-  const { getCustomizations, allSettings, iconMenuItems } = data;
+  // const blockAreas = data.blockAreas;
+  const {
+    getCustomizations //, allSettings, iconMenuItems
+  } = data;
   return (
     <div className="header">
-      {getCustomizations.logourl ? (
+      <Helmet>
+        <link rel="icon" href={getCustomizations.siteiconurl} sizes="32x32" />
+        <link rel="icon" href={getCustomizations.siteiconurl} sizes="192x192" />
+        <link rel="apple-touch-icon" href={getCustomizations.siteiconurl} />
+      </Helmet>
+      {/* {getCustomizations.logourl ? (
         <LinkButton to="/">
           <img
             src={getCustomizations.logourl}
@@ -96,7 +101,7 @@ const Header = () => {
             {allSettings.generalSettingsDescription}
           </ListItemText>
         </div>
-      )}
+      )} */}
       {/* {blockAreas.nodes
         .filter(({ slug }) => slug === "header-blocks")
         .map(({ content, databaseId }) => (

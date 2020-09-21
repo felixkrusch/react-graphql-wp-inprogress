@@ -3,7 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import { baseUrl } from "../wpconfig";
 import ReactHtmlParser from "react-html-parser";
 import { replaceUrl } from "./Page";
-import { Menus } from "./MuiDrawer/Header/Header";
+import { Menus } from "./MuiDrawer/Navigation/Navigation";
 import Loading from "./Loading/Loading";
 
 const FOOTER_QUERY = gql`

@@ -2,22 +2,18 @@ import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
-import { makeStyles, fade, useTheme } from "@material-ui/core/styles";
-import Header from "./Header/Header";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Navigation from "./Navigation/Navigation";
 import Routes from "../Routes";
-import SearchIcon from "@material-ui/icons/Search";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import MenuIcon from "@material-ui/icons/Menu";
 
 import Drawer from "@material-ui/core/Drawer";
-import {
-  FormControlLabel,
-  Switch,
-  IconButton,
-  Typography,
-  InputBase
-} from "@material-ui/core";
+import { FormControlLabel, Switch, IconButton } from "@material-ui/core";
+import { Search } from "../Search/Search";
+import { Logo } from "./Logo/Logo";
+import { SocialLinks } from "./SocialLinks/SocialLinks";
 // const MENU_QUERY = gql`
 //   query Menus {
 //     getCustomizations {
@@ -32,8 +28,6 @@ const useStyles = makeStyles(theme => ({
     display: "flex"
   },
   drawer: {
-    // width: drawerWidth,
-    // flexShrink: 0,
     [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
       flexShrink: 0
@@ -63,49 +57,7 @@ const useStyles = makeStyles(theme => ({
       display: "none"
     }
   },
-  title: {
-    flexGrow: 1
-  },
-  search: {
-    marginRight: 10,
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25)
-    },
-    marginLeft: 0,
-    // width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      // marginLeft: theme.spacing(1)
-      width: "auto"
-    }
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  inputRoot: {
-    color: "inherit"
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    // width: "100%",
-    width: "12ch",
-    "&:focus": {
-      width: "20ch"
-    }
-    // [theme.breakpoints.up("sm")]: {
-    // }
-  },
+
   switchLabel: {
     marginRight: 0
   }
@@ -120,8 +72,6 @@ function MuiDrawer({ toggleDarkMode }) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  // const container =
-  //   window !== undefined ? () => window().document.body : undefined;
   return (
     <div className={classes.root}>
       <Drawer
@@ -137,7 +87,7 @@ function MuiDrawer({ toggleDarkMode }) {
         }}
         anchor="left"
       >
-        <Header />
+        <Navigation />
       </Drawer>
 
       <CssBaseline />
@@ -152,22 +102,9 @@ function MuiDrawer({ toggleDarkMode }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            App Bar
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
+          <Logo />
+          <Search />
+          <SocialLinks />
           <FormControlLabel
             className={classes.switchLabel}
             control={<Switch onClick={toggleDarkMode} />}

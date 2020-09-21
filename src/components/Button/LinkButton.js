@@ -2,7 +2,7 @@ import React, { forwardRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { ListItem, ListItemText } from "@material-ui/core";
 
-const LinkButton = ({ to, children, onClick, onMouseEnter }) => {
+const LinkButton = ({ to, children, onClick, onMouseEnter, dense }) => {
   const CustomLink = useMemo(
     () =>
       forwardRef((linkProps, ref) => <Link ref={ref} to={to} {...linkProps} />),
@@ -10,6 +10,7 @@ const LinkButton = ({ to, children, onClick, onMouseEnter }) => {
   );
   return (
     <ListItem
+      dense={dense}
       onClick={onClick}
       className="link-btn"
       button

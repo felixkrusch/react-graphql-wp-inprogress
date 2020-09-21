@@ -7,7 +7,7 @@ import AuthorArchive from "./AuthorArchive";
 import Gallery from "./Gallery";
 import Page from "./Page";
 import Footer from "./Footer";
-import Head from "./MuiDrawer/Header/Head";
+import Head from "./MuiDrawer/Navigation/Head";
 
 export default () => {
   const [activePage, setActivePage] = useState("");

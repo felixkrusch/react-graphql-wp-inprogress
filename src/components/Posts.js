@@ -25,6 +25,7 @@ const STICKY_POSTS_QUERY = gql`
     }
   }
 `;
+
 const POSTS_QUERY = gql`
   query GET_POSTS(
     $first: Int
@@ -51,6 +52,15 @@ const POSTS_QUERY = gql`
         databaseId
         title(format: RENDERED)
         slug
+
+        link
+        excerpt
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
       }
     }
   }
@@ -110,12 +120,14 @@ const FeaturedSection = ({ stickyPosts }) => {
         <h3>
           <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
         </h3>
-        <div>
-          <img
-            src={featuredImage && featuredImage.node.sourceUrl}
-            alt={featuredImage && featuredImage.node.altText}
-          />
-        </div>
+        {featuredImage && (
+          <div>
+            <img
+              src={featuredImage.node.sourceUrl}
+              alt={featuredImage.node.altText}
+            />
+          </div>
+        )}
         <div>{ReactHtmlParser(excerpt)}</div>
       </div>
     )
@@ -142,24 +154,32 @@ const Posts = ({ onActivePage }) => {
   const { stickyPosts } = stickeyPostData;
   const { posts } = data;
   const { nodes } = posts;
-  const stickeyPostIds = stickyPosts.nodes.map(({ databaseId }) => databaseId);
+  // const stickeyPostIds = stickyPosts.nodes.map(({ databaseId }) => databaseId);
 
   return (
     <div className="posts">
       <Search onSearch={val => setSearch(val)} />
-
       <h3>feature section</h3>
       {!posts.pageInfo.hasPreviousPage && (
         <FeaturedSection stickyPosts={stickyPosts} />
       )}
       <h3>posts</h3>
       {nodes
-        .filter(({ databaseId }) => !stickeyPostIds.includes(databaseId))
-        .map(({ databaseId, title, slug }) => (
+        // .filter(({ databaseId }) => !stickeyPostIds.includes(databaseId))
+        .map(({ databaseId, title, slug, featuredImage, excerpt }) => (
           <div className="post" key={databaseId}>
             <h3>
               <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
             </h3>
+            {featuredImage && (
+              <div>
+                <img
+                  src={featuredImage.node.sourceUrl}
+                  alt={featuredImage.node.altText}
+                />
+              </div>
+            )}
+            <div>{ReactHtmlParser(excerpt)}</div>
           </div>
         ))}
       <Pagination

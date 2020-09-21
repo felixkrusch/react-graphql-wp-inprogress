@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { gql, useLazyQuery } from "@apollo/client";
-import { getUrl } from "./MuiDrawer/Header/Header";
+import { getUrl } from "./MuiDrawer/Navigation/Navigation";
 import { Pagination } from "./Posts";
 import { usePostQuery } from "./usePostQuery";
 import { Helmet } from "react-helmet";
