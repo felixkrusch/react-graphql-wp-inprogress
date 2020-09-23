@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
-import { baseUrl } from "../../../wpconfig";
 import classnames from "classnames";
 import { List, ListItemText, Button, MenuItem, Menu } from "@material-ui/core";
 import LinkButton from "../../Button/LinkButton";
@@ -19,8 +18,8 @@ const MENU_QUERY = gql`
       customcss
       colorhdfonthover
       siteiconurl
+      wpversion
     }
-
     # blockAreas {
     #   nodes {
     #     databaseId
@@ -57,7 +56,7 @@ const MENU_QUERY = gql`
   }
 `;
 export const getUrl = url => {
-  url = url.replace(baseUrl, "");
+  url = url.replace(window.baseUrl, "");
   if (url.indexOf("://") >= 0) {
     return { url, isExternal: true };
   }
@@ -83,6 +82,10 @@ const Header = () => {
         <link rel="icon" href={getCustomizations.siteiconurl} sizes="32x32" />
         <link rel="icon" href={getCustomizations.siteiconurl} sizes="192x192" />
         <link rel="apple-touch-icon" href={getCustomizations.siteiconurl} />
+        <link
+          rel="stylesheet"
+          href={`${window.baseUrl}/wp-includes/css/dist/block-library/style.min.css?ver=${getCustomizations.wpversion}`}
+        />
       </Helmet>
       {/* {getCustomizations.logourl ? (
         <LinkButton to="/">

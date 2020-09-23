@@ -3,7 +3,6 @@ import { useParams, useHistory, Link } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import Comments from "./Comments";
-import { baseUrl } from "../wpconfig";
 import { Helmet } from "react-helmet";
 import Loading from "./Loading/Loading";
 
@@ -73,7 +72,7 @@ const PAGE_QUERY = gql`
   }
 `;
 export const replaceUrl = url => {
-  return url.replace(new RegExp(`href="${baseUrl}`, "g"), `href="`);
+  return url.replace(new RegExp(`href="${window.baseUrl}`, "g"), `href="`);
 };
 const Page = () => {
   const { slug, slugChild } = useParams();
@@ -111,7 +110,7 @@ const Page = () => {
       const regPdf = new RegExp("^.+.(([pP][dD][fF]))$");
       if (regPdf.test(target.href)) {
         e.preventDefault();
-        target.href = `${baseUrl}${target.pathname}`;
+        target.href = `${window.baseUrl}${target.pathname}`;
         window.open(target.href);
       }
     }

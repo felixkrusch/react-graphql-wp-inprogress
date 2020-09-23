@@ -5,14 +5,15 @@ import {
   InputBase,
   List,
   ListItem,
-  Popover,
-  CircularProgress
+  CircularProgress,
+  Popper,
+  ClickAwayListener,
+  Typography
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { useLazyQuery, gql } from "@apollo/client";
 import { usePostQuery } from "../usePostQuery";
 import ReactHtmlParser from "react-html-parser";
-import { Link } from "react-router-dom";
 import LinkButton from "../Button/LinkButton";
 
 const useStyles = makeStyles(theme => ({
@@ -58,11 +59,24 @@ const useStyles = makeStyles(theme => ({
     color: "inherit",
     textDecoration: "none"
   },
+
   listItem: {
+    flexFlow: "column",
+    alignItems: "flex-start",
     "&:hover": {
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText
     }
+  },
+  popper: {
+    backgroundColor: theme.palette.primary.contrastText,
+    zIndex: 2000,
+    boxShadow:
+      "0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)",
+    borderRadius: 4,
+    maxHeight: 300,
+    overflow: "auto",
+    maxWidth: 300
   }
 }));
 
@@ -73,14 +87,23 @@ const POSTS_QUERY = gql`
         databaseId
         title(format: RENDERED)
         slug
+
+        date
+        excerpt
+        featuredImage {
+          node {
+            sourceUrl
+            altText
+          }
+        }
       }
     }
   }
 `;
 export const Search = () => {
   const classes = useStyles();
-  const popoverActions = useRef(null);
   const anchorElRef = useRef(null);
+  const [showFull, setShowFull] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [search, setSearch] = useState("");
   const postsQuery = useLazyQuery(POSTS_QUERY);
@@ -88,13 +111,6 @@ export const Search = () => {
     query: postsQuery,
     search
   });
-  useEffect(() => {
-    setTimeout(() => {
-      if (popoverActions.current) {
-        popoverActions.current.updatePosition();
-      }
-    }, 0);
-  }, [data, popoverActions]);
   const posts = data?.posts?.nodes || [];
   const handlePopoverOpen = event => {
     setAnchorEl(event.currentTarget);
@@ -102,69 +118,84 @@ export const Search = () => {
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
+    setShowFull(false);
   };
-
+  const showFullResults = e => {
+    handlePopoverOpen(e);
+    setShowFull(true);
+  };
   const open = Boolean(anchorEl);
   return (
-    <div
-      ref={item => (anchorElRef.current = item)}
-      className={classes.search}
-      aria-haspopup="true"
-    >
-      <div onClick={handlePopoverOpen} className={classes.searchIcon}>
-        <SearchIcon />
-      </div>
-      <InputBase
-        value={search}
-        onChange={({ target: { value } }) => setSearch(value)}
-        placeholder="Search…"
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput
-        }}
-        inputProps={{ "aria-label": "search" }}
-        onKeyDown={e => e.key === "Enter" && handlePopoverOpen(e)}
-      />
-      <Popover
-        onClose={handlePopoverClose}
-        anchorEl={anchorElRef.current}
-        open={open}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
-        }}
-        action={popoverActions}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left"
-        }}
+    <ClickAwayListener onClickAway={handlePopoverClose}>
+      <div
+        ref={item => (anchorElRef.current = item)}
+        className={classes.search}
+        aria-haspopup="true"
       >
-        <List component="div" className={classes.list}>
-          {loading ? (
-            <ListItem>
-              <CircularProgress />
-            </ListItem>
-          ) : posts.length === 0 ? (
-            <ListItem>No search result</ListItem>
-          ) : (
-            posts.map(post => (
-              <LinkButton
-                dense
-                onClick={handlePopoverClose}
-                to={`/${post.slug}/`}
-                className={classes.listItem}
-                key={post.databaseId}
-              >
-                {/* <Link
+        <div onClick={handlePopoverOpen} className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
+        <InputBase
+          value={search}
+          onChange={({ target: { value } }) => setSearch(value)}
+          placeholder="Search…"
+          onFocus={e => handlePopoverOpen(e)}
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput
+          }}
+          inputProps={{ "aria-label": "search" }}
+          onKeyDown={e => e.key === "Enter" && showFullResults(e)}
+        />
+        <Popper
+          className={classes.popper}
+          onClose={handlePopoverClose}
+          anchorEl={anchorElRef.current}
+          open={open}
+          placement="bottom-start"
+        >
+          <List className={classes.list}>
+            {loading ? (
+              <ListItem>
+                <CircularProgress />
+              </ListItem>
+            ) : posts.length === 0 ? (
+              <ListItem>No search result</ListItem>
+            ) : (
+              posts.map(post => (
+                <LinkButton
+                  dense
+                  onClick={handlePopoverClose}
+                  to={`/${post.slug}/`}
+                  className={classes.listItem}
+                  key={post.databaseId}
+                >
+                  {/* <Link
                   className={classes.link}
                 > */}
-                {ReactHtmlParser(post.title)}
-                {/* </Link> */}
-              </LinkButton>
-            ))
-          )}
-        </List>
-      </Popover>
-    </div>
+                  <Typography>{ReactHtmlParser(post.title)}</Typography>
+                  {/* </Link> */}
+                  {showFull && (
+                    <>
+                      {post.date}
+                      <br />
+                      {post.featuredImage && (
+                        <div>
+                          <img
+                            src={post.featuredImage.node.sourceUrl}
+                            alt={post.featuredImage.node.altText}
+                          />
+                        </div>
+                      )}
+                      <div>{ReactHtmlParser(post.excerpt)}</div>
+                    </>
+                  )}
+                </LinkButton>
+              ))
+            )}
+          </List>
+        </Popper>
+      </div>
+    </ClickAwayListener>
   );
 };

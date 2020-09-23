@@ -38,6 +38,7 @@ export const SocialLinks = () => {
       {socialLinks.map(item => {
         return (
           <Button
+            key={item.id}
             className={classnames(classes.linkButton, item.cssClasses)}
             href={`${item.url}`}
             target="_blank"

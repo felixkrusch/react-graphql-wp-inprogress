@@ -1,6 +1,5 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
-import { baseUrl } from "../wpconfig";
 import ReactHtmlParser from "react-html-parser";
 import { replaceUrl } from "./Page";
 import { Menus } from "./MuiDrawer/Navigation/Navigation";
@@ -31,7 +30,7 @@ const FOOTER_QUERY = gql`
   }
 `;
 export const getUrl = url => {
-  url = url.replace(baseUrl, "");
+  url = url.replace(window.baseUrl, "");
   if (url.indexOf("://") >= 0) {
     return { url, isExternal: true };
   }

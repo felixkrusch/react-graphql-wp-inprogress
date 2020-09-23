@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -8,19 +8,20 @@ import Routes from "../Routes";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 import MenuIcon from "@material-ui/icons/Menu";
-
+import moment from "moment";
 import Drawer from "@material-ui/core/Drawer";
 import { FormControlLabel, Switch, IconButton } from "@material-ui/core";
 import { Search } from "../Search/Search";
 import { Logo } from "./Logo/Logo";
 import { SocialLinks } from "./SocialLinks/SocialLinks";
-// const MENU_QUERY = gql`
-//   query Menus {
-//     getCustomizations {
-//       siteiconurl
-//     }
-//   }
-// `;
+import { gql, useQuery } from "@apollo/client";
+const MENU_QUERY = gql`
+  query Menus {
+    getCustomizations {
+      disabledarkmodetoggle
+    }
+  }
+`;
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -65,13 +66,31 @@ const useStyles = makeStyles(theme => ({
 
 function MuiDrawer({ toggleDarkMode }) {
   const classes = useStyles();
+  const [darkModeActive, setDarkModeActive] = useState(false);
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
   const isUpSM = useMediaQuery(theme.breakpoints.up("sm"));
 
+  const menuApi = useQuery(MENU_QUERY);
+  const { loading, error, data } = menuApi;
+  console.log("data...", data);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  useEffect(() => {
+    if (!data) return;
+    const disabledarkmodetoggle = data?.disabledarkmodetoggle;
+    if (!disabledarkmodetoggle) {
+      const isBetween = moment().isBetween(
+        moment("05:30", "HH:mm"),
+        moment("21:30", "HH:mm")
+      );
+      if (isBetween) return;
+      setDarkModeActive(true);
+      toggleDarkMode();
+    }
+  }, [data]);
+  const disabledarkmodetoggle = data?.disabledarkmodetoggle;
   return (
     <div className={classes.root}>
       <Drawer
@@ -105,10 +124,20 @@ function MuiDrawer({ toggleDarkMode }) {
           <Logo />
           <Search />
           <SocialLinks />
-          <FormControlLabel
-            className={classes.switchLabel}
-            control={<Switch onClick={toggleDarkMode} />}
-          />
+          {!loading && !disabledarkmodetoggle && (
+            <FormControlLabel
+              className={classes.switchLabel}
+              control={
+                <Switch
+                  onChange={() => {
+                    toggleDarkMode();
+                    setDarkModeActive(!darkModeActive);
+                  }}
+                  checked={darkModeActive}
+                />
+              }
+            />
+          )}
         </Toolbar>
       </AppBar>
 

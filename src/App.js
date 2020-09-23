@@ -1,7 +1,6 @@
 import React from "react";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { IntrospectionFragmentMatcher } from "apollo-cache-inmemory";
-import Config from "./wpconfig";
 import introspectionQueryResultData from "./fragmentTypes.json";
 import { ThemeProvider } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core";
@@ -14,7 +13,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData
 });
 const client = new ApolloClient({
-  uri: Config.wpUrl,
+  uri: window.Config.wpUrl,
   cache: new InMemoryCache({ fragmentMatcher })
 });
 const App = () => {

@@ -5,7 +5,6 @@ import ReactHtmlParser from "react-html-parser";
 import { Pagination } from "./Posts";
 import { Author } from "./Page";
 import { usePostQuery } from "./usePostQuery";
-import { baseUrl } from "../wpconfig";
 import Loading from "./Loading/Loading";
 
 //post query updated
@@ -51,7 +50,7 @@ const AUTHOR_QUERY = gql`
   }
 `;
 const replaceUrl = url => {
-  return url.replace(baseUrl, "");
+  return url.replace(window.baseUrl, "");
 };
 const updateQuery = (previousResult, { fetchMoreResult }) => {
   return fetchMoreResult.posts.nodes.length ? fetchMoreResult : previousResult;
