@@ -161,7 +161,9 @@ const FeaturedSection = ({ stickyPosts }) => {
 };
 const Posts = ({ onActivePage }) => {
   const [search, setSearch] = useState("");
+  const [isFetch, setIsFetch] = useState(false);
   const postsQuery = useLazyQuery(POSTS_QUERY);
+
   const [
     postQuery,
     { loading: pLoading, error: pError, data: postData }
@@ -181,21 +183,25 @@ const Posts = ({ onActivePage }) => {
   const [, { fetchMore }] = postsQuery;
   const { loading, data, error, postsPerPage } = usePostQuery({
     query: postsQuery,
-    search
+    search,
+    isFetch
   });
   useEffect(() => {
     if (!staticPageData) return;
     const {
       getCustomizations: { postspageid, staticfrontpageid }
     } = staticPageData;
-
+    if (!parseInt(staticfrontpageid) || !parseInt(postspageid)) {
+      setIsFetch(true);
+    }
     if (parseInt(staticfrontpageid)) {
       frontPageQuery({
         variables: {
           id: staticfrontpageid
         }
       });
-    } else if (parseInt(postspageid)) {
+    }
+    if (parseInt(postspageid)) {
       postQuery({
         variables: {
           id: postspageid
@@ -207,42 +213,46 @@ const Posts = ({ onActivePage }) => {
     onActivePage("posts");
     return () => onActivePage("");
   }, []);
-  if (loading || sLoading) return <Loading />;
+  if (sLoading) return <Loading />;
   if (error || sError) return <p>Something wrong happened inside!</p>;
   const { stickyPosts } = stickeyPostData;
-  const { posts } = data;
-  const { nodes } = posts;
+  const posts = data?.posts || {};
   return (
     <div className="posts">
       <Search onSearch={val => setSearch(val)} />
       <h3>feature section</h3>
-      {!posts.pageInfo.hasPreviousPage && (
+      {!posts?.pageInfo?.hasPreviousPage && (
         <FeaturedSection stickyPosts={stickyPosts} />
       )}
       {postData && (
         <div>
-          <h3>post page </h3>
+          <h3>Post page</h3>
           <Post post={postData.post} />
         </div>
       )}
+
+      {posts.nodes && (
+        <>
+          <h3>Postlist</h3>
+          {posts.nodes?.map(post => (
+            <Post key={post.databaseId} post={post} />
+          ))}
+        </>
+      )}
       {frontPageData && (
         <div>
-          <h3>front page</h3>
+          <h3>Home page</h3>
           <Post post={frontPageData.post} />
         </div>
       )}
-      <h3>posts</h3>
-      {nodes
-        // .filter(({ databaseId }) => !stickeyPostIds.includes(databaseId))
-        .map(post => (
-          <Post key={post.databaseId} post={post} />
-        ))}
-      <Pagination
-        fetchMore={fetchMore}
-        posts={posts}
-        updateQuery={updateQuery}
-        postsPerPage={postsPerPage}
-      />
+      {posts.nodes && (
+        <Pagination
+          fetchMore={fetchMore}
+          posts={posts}
+          updateQuery={updateQuery}
+          postsPerPage={postsPerPage}
+        />
+      )}
     </div>
   );
 };
