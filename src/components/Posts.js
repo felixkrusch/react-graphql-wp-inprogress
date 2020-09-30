@@ -224,13 +224,18 @@ const Posts = ({ onActivePage }) => {
       {!posts?.pageInfo?.hasPreviousPage && (
         <FeaturedSection stickyPosts={stickyPosts} />
       )}
+      {frontPageData && (
+        <div>
+          <h3>Home page</h3>
+          <Post post={frontPageData.post} />
+        </div>
+      )}
       {postData && (
         <div>
           <h3>Post page</h3>
           <Post post={postData.post} />
         </div>
       )}
-
       {posts.nodes && (
         <>
           <h3>Postlist</h3>
@@ -238,12 +243,6 @@ const Posts = ({ onActivePage }) => {
             <Post key={post.databaseId} post={post} />
           ))}
         </>
-      )}
-      {frontPageData && (
-        <div>
-          <h3>Home page</h3>
-          <Post post={frontPageData.post} />
-        </div>
       )}
       {posts.nodes && (
         <Pagination
