@@ -25,6 +25,32 @@ const STICKY_POSTS_QUERY = gql`
     }
   }
 `;
+const STATIC_PAGE = gql`
+  query staticPage {
+    getCustomizations {
+      postspageid
+      staticfrontpageid
+    }
+  }
+`;
+
+const POST_QUERY = gql`
+  query Page($id: ID!) {
+    post(id: $id, idType: DATABASE_ID) {
+      databaseId
+      title(format: RENDERED)
+      # content(format: RENDERED)
+      excerpt
+      link
+      slug
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
+    }
+  }
+`;
 
 const POSTS_QUERY = gql`
   query GET_POSTS(
@@ -136,6 +162,19 @@ const FeaturedSection = ({ stickyPosts }) => {
 const Posts = ({ onActivePage }) => {
   const [search, setSearch] = useState("");
   const postsQuery = useLazyQuery(POSTS_QUERY);
+  const [
+    postQuery,
+    { loading: pLoading, error: pError, data: postData }
+  ] = useLazyQuery(POST_QUERY);
+
+  const [
+    frontPageQuery,
+    { loading: fpLoading, error: fpError, data: frontPageData }
+  ] = useLazyQuery(POST_QUERY);
+
+  const { loading: isLoading, error: isError, data: staticPageData } = useQuery(
+    STATIC_PAGE
+  );
   const { data: stickeyPostData, loading: sLoading, error: sError } = useQuery(
     STICKY_POSTS_QUERY
   );
@@ -144,7 +183,26 @@ const Posts = ({ onActivePage }) => {
     query: postsQuery,
     search
   });
+  useEffect(() => {
+    if (!staticPageData) return;
+    const {
+      getCustomizations: { postspageid, staticfrontpageid }
+    } = staticPageData;
 
+    if (parseInt(staticfrontpageid)) {
+      frontPageQuery({
+        variables: {
+          id: staticfrontpageid
+        }
+      });
+    } else if (parseInt(postspageid)) {
+      postQuery({
+        variables: {
+          id: postspageid
+        }
+      });
+    }
+  }, [staticPageData]);
   useEffect(() => {
     onActivePage("posts");
     return () => onActivePage("");
@@ -154,8 +212,6 @@ const Posts = ({ onActivePage }) => {
   const { stickyPosts } = stickeyPostData;
   const { posts } = data;
   const { nodes } = posts;
-  // const stickeyPostIds = stickyPosts.nodes.map(({ databaseId }) => databaseId);
-
   return (
     <div className="posts">
       <Search onSearch={val => setSearch(val)} />
@@ -163,24 +219,23 @@ const Posts = ({ onActivePage }) => {
       {!posts.pageInfo.hasPreviousPage && (
         <FeaturedSection stickyPosts={stickyPosts} />
       )}
+      {postData && (
+        <div>
+          <h3>post page </h3>
+          <Post post={postData.post} />
+        </div>
+      )}
+      {frontPageData && (
+        <div>
+          <h3>front page</h3>
+          <Post post={frontPageData.post} />
+        </div>
+      )}
       <h3>posts</h3>
       {nodes
         // .filter(({ databaseId }) => !stickeyPostIds.includes(databaseId))
-        .map(({ databaseId, title, slug, featuredImage, excerpt }) => (
-          <div className="post" key={databaseId}>
-            <h3>
-              <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
-            </h3>
-            {featuredImage && (
-              <div>
-                <img
-                  src={featuredImage.node.sourceUrl}
-                  alt={featuredImage.node.altText}
-                />
-              </div>
-            )}
-            <div>{ReactHtmlParser(excerpt)}</div>
-          </div>
+        .map(post => (
+          <Post key={post.databaseId} post={post} />
         ))}
       <Pagination
         fetchMore={fetchMore}
@@ -193,7 +248,26 @@ const Posts = ({ onActivePage }) => {
 };
 
 export default Posts;
-
+const Post = ({
+  post: { databaseId, title, slug, featuredImage, excerpt }
+}) => {
+  return (
+    <div className="post" key={databaseId}>
+      <h3>
+        <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
+      </h3>
+      {featuredImage && (
+        <div>
+          <img
+            src={featuredImage.node.sourceUrl}
+            alt={featuredImage.node.altText}
+          />
+        </div>
+      )}
+      <div>{ReactHtmlParser(excerpt)}</div>
+    </div>
+  );
+};
 const Search = ({ onSearch }) => {
   const [search, setSearch] = useState("");
   return (

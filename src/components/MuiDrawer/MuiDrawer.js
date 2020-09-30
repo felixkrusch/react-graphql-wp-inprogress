@@ -73,7 +73,6 @@ function MuiDrawer({ toggleDarkMode }) {
 
   const menuApi = useQuery(MENU_QUERY);
   const { loading, error, data } = menuApi;
-  console.log("data...", data);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
