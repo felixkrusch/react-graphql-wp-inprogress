@@ -39,7 +39,7 @@ const POST_QUERY = gql`
     post(id: $id, idType: DATABASE_ID) {
       databaseId
       title(format: RENDERED)
-      # content(format: RENDERED)
+      content(format: RENDERED)
       excerpt
       link
       slug
@@ -191,7 +191,7 @@ const Posts = ({ onActivePage }) => {
     const {
       getCustomizations: { postspageid, staticfrontpageid }
     } = staticPageData;
-    if (!parseInt(staticfrontpageid) || !parseInt(postspageid)) {
+    if (!parseInt(staticfrontpageid)) {
       setIsFetch(true);
     }
     if (parseInt(staticfrontpageid)) {
@@ -200,8 +200,7 @@ const Posts = ({ onActivePage }) => {
           id: staticfrontpageid
         }
       });
-    }
-    if (parseInt(postspageid)) {
+    } else if (parseInt(postspageid)) {
       postQuery({
         variables: {
           id: postspageid
@@ -220,22 +219,28 @@ const Posts = ({ onActivePage }) => {
   return (
     <div className="posts">
       <Search onSearch={val => setSearch(val)} />
-      <h3>feature section</h3>
-      {!posts?.pageInfo?.hasPreviousPage && (
-        <FeaturedSection stickyPosts={stickyPosts} />
-      )}
       {frontPageData && (
         <div>
           <h3>Home page</h3>
           <Post post={frontPageData.post} />
         </div>
       )}
+
       {postData && (
         <div>
           <h3>Post page</h3>
           <Post post={postData.post} />
         </div>
       )}
+      {posts.pageInfo && (
+        <>
+          <h3>feature section</h3>
+          {!posts?.pageInfo?.hasPreviousPage && (
+            <FeaturedSection stickyPosts={stickyPosts} />
+          )}
+        </>
+      )}
+
       {posts.nodes && (
         <>
           <h3>Postlist</h3>
@@ -258,7 +263,7 @@ const Posts = ({ onActivePage }) => {
 
 export default Posts;
 const Post = ({
-  post: { databaseId, title, slug, featuredImage, excerpt }
+  post: { databaseId, title, slug, featuredImage, excerpt, content }
 }) => {
   return (
     <div className="post" key={databaseId}>
@@ -273,7 +278,7 @@ const Post = ({
           />
         </div>
       )}
-      <div>{ReactHtmlParser(excerpt)}</div>
+      <div>{ReactHtmlParser(content ? content : excerpt)}</div>
     </div>
   );
 };
