@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory, Link } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useLazyQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import Comments from "./Comments";
 import { Helmet } from "react-helmet";
 import Loading from "./Loading/Loading";
+import {
+  STICKY_POSTS_QUERY,
+  POSTS_QUERY,
+  FeaturedSection,
+  Post,
+  Pagination,
+  updateQuery,
+  STATIC_PAGE
+} from "./Posts";
+import { usePostQuery } from "./usePostQuery";
 
 const PAGE_QUERY = gql`
   query Page($id: ID!) {
@@ -75,6 +85,27 @@ export const replaceUrl = url => {
   return url.replace(new RegExp(`href="${window.baseUrl}`, "g"), `href="`);
 };
 const Page = () => {
+  const postsQuery = useLazyQuery(POSTS_QUERY);
+  const [isFetch, setIsFetch] = useState(false);
+  const { loading: isLoading, error: isError, data: staticPageData } = useQuery(
+    STATIC_PAGE
+  );
+  const [
+    stickeyPostsQuery,
+    { data: stickeyPostData, loading: sLoading, error: sError }
+  ] = useLazyQuery(STICKY_POSTS_QUERY);
+  const [, { fetchMore }] = postsQuery;
+  const {
+    loading: pLoading,
+    data: pData,
+    error: pError,
+    postsPerPage
+  } = usePostQuery({
+    query: postsQuery,
+    search: "",
+    isFetch
+  });
+
   const { slug, slugChild } = useParams();
   const history = useHistory();
   // creating complete slug path
@@ -82,6 +113,19 @@ const Page = () => {
   const { loading, error, data } = useQuery(PAGE_QUERY, {
     variables: { id: path, search: "" }
   });
+  useEffect(() => {
+    if (!staticPageData || !data) return;
+    const {
+      getCustomizations: { postspageid }
+    } = staticPageData;
+    const isPostActive = parseInt(postspageid) === data.page.databaseId;
+    if (isPostActive) {
+      setIsFetch(true);
+      stickeyPostsQuery();
+    } else {
+      setIsFetch(false);
+    }
+  }, [staticPageData, data]);
 
   if (loading) return <Loading />;
   if (error) return <p>Something wrong happened!</p>;
@@ -115,7 +159,8 @@ const Page = () => {
       }
     }
   };
-
+  const posts = pData?.posts || {};
+  const stickyPosts = stickeyPostData?.stickyPosts || {};
   return (
     <div className="page">
       <Helmet>
@@ -158,6 +203,34 @@ const Page = () => {
         contentId={page.databaseId}
         commentStatus={page.commentStatus}
       />
+      {isFetch && (
+        <>
+          {posts.pageInfo && (
+            <>
+              <h3>Feature section</h3>
+              {!posts?.pageInfo?.hasPreviousPage && stickyPosts.nodes && (
+                <FeaturedSection stickyPosts={stickyPosts} />
+              )}
+            </>
+          )}
+          {posts.nodes && (
+            <>
+              <h3>Postlist</h3>
+              {posts.nodes?.map(post => (
+                <Post key={post.databaseId} post={post} />
+              ))}
+            </>
+          )}
+          {posts.nodes && (
+            <Pagination
+              fetchMore={fetchMore}
+              posts={posts}
+              updateQuery={updateQuery}
+              postsPerPage={postsPerPage}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

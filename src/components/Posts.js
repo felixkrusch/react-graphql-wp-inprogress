@@ -6,7 +6,7 @@ import { usePostQuery } from "./usePostQuery";
 import Loading from "./Loading/Loading";
 import { Input, Button } from "@material-ui/core";
 
-const STICKY_POSTS_QUERY = gql`
+export const STICKY_POSTS_QUERY = gql`
   query stickyPosts {
     stickyPosts: posts(where: { onlySticky: true }) {
       nodes {
@@ -25,7 +25,7 @@ const STICKY_POSTS_QUERY = gql`
     }
   }
 `;
-const STATIC_PAGE = gql`
+export const STATIC_PAGE = gql`
   query staticPage {
     getCustomizations {
       postspageid
@@ -52,7 +52,7 @@ const POST_QUERY = gql`
   }
 `;
 
-const POSTS_QUERY = gql`
+export const POSTS_QUERY = gql`
   query GET_POSTS(
     $first: Int
     $last: Int
@@ -91,7 +91,7 @@ const POSTS_QUERY = gql`
     }
   }
 `;
-const updateQuery = (previousResult, { fetchMoreResult }) => {
+export const updateQuery = (previousResult, { fetchMoreResult }) => {
   return fetchMoreResult.posts.nodes.length ? fetchMoreResult : previousResult;
 };
 export const Pagination = ({ posts, fetchMore, updateQuery, postsPerPage }) => {
@@ -139,7 +139,7 @@ export const Pagination = ({ posts, fetchMore, updateQuery, postsPerPage }) => {
     </div>
   );
 };
-const FeaturedSection = ({ stickyPosts }) => {
+export const FeaturedSection = ({ stickyPosts }) => {
   return stickyPosts.nodes.map(
     ({ databaseId, title, slug, featuredImage, excerpt }) => (
       <div key={databaseId}>
@@ -262,7 +262,7 @@ const Posts = ({ onActivePage }) => {
 };
 
 export default Posts;
-const Post = ({
+export const Post = ({
   post: { databaseId, title, slug, featuredImage, excerpt, content }
 }) => {
   return (
