@@ -190,19 +190,22 @@ const Page = () => {
         }`}
         </script>
       </Helmet>
-      <h3 className="title">{page.title}</h3>
-      <div>{page.date}</div>
-
-      <div onClick={handleClick}>
-        {ReactHtmlParser(replaceUrl(page.content))}
-      </div>
-      {page.author && <Author author={page.author.node} link />}
-      {page.tags && <Tags tags={page.tags} />}
-      {page.categories && <Categories categories={page.categories} />}
-      <Comments
-        contentId={page.databaseId}
-        commentStatus={page.commentStatus}
-      />
+      {!isFetch && (
+        <>
+          <h3 className="title">{page.title}</h3>
+          <div>{page.date}</div>
+          <div onClick={handleClick}>
+            {ReactHtmlParser(replaceUrl(page.content))}
+          </div>
+          {page.author && <Author author={page.author.node} link />}
+          {page.tags && <Tags tags={page.tags} />}
+          {page.categories && <Categories categories={page.categories} />}
+          <Comments
+            contentId={page.databaseId}
+            commentStatus={page.commentStatus}
+          />
+        </>
+      )}
       {isFetch && (
         <>
           {posts.pageInfo && (
