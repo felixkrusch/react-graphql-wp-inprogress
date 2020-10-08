@@ -15,6 +15,7 @@ import { useLazyQuery, gql } from "@apollo/client";
 import { usePostQuery } from "../usePostQuery";
 import ReactHtmlParser from "react-html-parser";
 import LinkButton from "../Button/LinkButton";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   search: {
@@ -103,6 +104,7 @@ const POSTS_QUERY = gql`
 export const Search = () => {
   const classes = useStyles();
   const anchorElRef = useRef(null);
+  const history = useHistory();
   const [showFull, setShowFull] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [search, setSearch] = useState("");
@@ -123,6 +125,12 @@ export const Search = () => {
   const showFullResults = e => {
     handlePopoverOpen(e);
     setShowFull(true);
+  };
+  const handleKeyDown = e => {
+    if (e.key === "Enter") {
+      history.push(`/?search=${search}`);
+      handlePopoverClose();
+    }
   };
   const open = Boolean(anchorEl);
   return (
@@ -145,7 +153,7 @@ export const Search = () => {
             input: classes.inputInput
           }}
           inputProps={{ "aria-label": "search" }}
-          onKeyDown={e => e.key === "Enter" && showFullResults(e)}
+          onKeyDown={handleKeyDown}
         />
         <Popper
           className={classes.popper}

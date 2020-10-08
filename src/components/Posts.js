@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { gql, useLazyQuery, useQuery } from "@apollo/client";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ReactHtmlParser from "react-html-parser";
 import { usePostQuery } from "./usePostQuery";
 import Loading from "./Loading/Loading";
 import { Input, Button } from "@material-ui/core";
+import queryString from "query-string";
 
 export const STICKY_POSTS_QUERY = gql`
   query stickyPosts {
@@ -78,7 +79,7 @@ export const POSTS_QUERY = gql`
         databaseId
         title(format: RENDERED)
         slug
-
+        date
         link
         excerpt
         featuredImage {
@@ -163,7 +164,7 @@ const Posts = ({ onActivePage }) => {
   const [search, setSearch] = useState("");
   const [isFetch, setIsFetch] = useState(false);
   const postsQuery = useLazyQuery(POSTS_QUERY);
-
+  const location = useLocation();
   const [
     postQuery,
     { loading: pLoading, error: pError, data: postData }
@@ -212,6 +213,13 @@ const Posts = ({ onActivePage }) => {
     onActivePage("posts");
     return () => onActivePage("");
   }, []);
+  useEffect(() => {
+    const parsed = queryString.parse(location.search);
+    if (parsed.search) {
+      setSearch(parsed.search);
+      setIsFetch(true);
+    }
+  }, [location]);
   if (isLoading) return <Loading />;
   if (error || isError) return <p>Something wrong happened inside!</p>;
   // const { stickyPosts } = stickeyPostData;
@@ -223,6 +231,7 @@ const Posts = ({ onActivePage }) => {
           setSearch(val);
           setIsFetch(true);
         }}
+        search={search}
       />
       {loading && <Loading />}
 
@@ -269,13 +278,14 @@ const Posts = ({ onActivePage }) => {
 
 export default Posts;
 export const Post = ({
-  post: { databaseId, title, slug, featuredImage, excerpt, content }
+  post: { databaseId, title, slug, featuredImage, excerpt, content, date }
 }) => {
   return (
     <div className="post" key={databaseId}>
       <h3>
         <Link to={`/${slug}/`}>{ReactHtmlParser(title)}</Link>
       </h3>
+      <div>{date}</div>
       {featuredImage && (
         <div>
           <img
@@ -288,8 +298,11 @@ export const Post = ({
     </div>
   );
 };
-const Search = ({ onSearch }) => {
+const Search = ({ onSearch, search: value }) => {
   const [search, setSearch] = useState("");
+  useEffect(() => {
+    setSearch(value);
+  }, [value]);
   return (
     <div>
       <Input
