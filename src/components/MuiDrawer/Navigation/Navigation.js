@@ -79,6 +79,8 @@ const Header = () => {
   return (
     <div className="header">
       <Helmet>
+        <meta property="og:url" content={window.baseUrl} />
+        <meta property="og:image" content={getCustomizations.siteiconurl} />
         <link rel="icon" href={getCustomizations.siteiconurl} sizes="32x32" />
         <link rel="icon" href={getCustomizations.siteiconurl} sizes="192x192" />
         <link rel="apple-touch-icon" href={getCustomizations.siteiconurl} />

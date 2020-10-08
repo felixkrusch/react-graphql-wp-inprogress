@@ -78,7 +78,8 @@ function MuiDrawer({ toggleDarkMode }) {
   };
   useEffect(() => {
     if (!data) return;
-    const disabledarkmodetoggle = data?.disabledarkmodetoggle;
+    const { getCustomizations } = data;
+    const disabledarkmodetoggle = getCustomizations?.disabledarkmodetoggle;
     if (!disabledarkmodetoggle) {
       const isBetween = moment().isBetween(
         moment("05:30", "HH:mm"),
@@ -89,7 +90,7 @@ function MuiDrawer({ toggleDarkMode }) {
       toggleDarkMode();
     }
   }, [data]);
-  const disabledarkmodetoggle = data?.disabledarkmodetoggle;
+  const disabledarkmodetoggle = data?.getCustomizations?.disabledarkmodetoggle;
   return (
     <div className={classes.root}>
       <Drawer

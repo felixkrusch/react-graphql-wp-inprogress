@@ -118,7 +118,7 @@ const Page = () => {
     const {
       getCustomizations: { postspageid }
     } = staticPageData;
-    const isPostActive = parseInt(postspageid) === data.page.databaseId;
+    const isPostActive = parseInt(postspageid) === data.page?.databaseId;
     if (isPostActive) {
       setIsFetch(true);
       stickeyPostsQuery();

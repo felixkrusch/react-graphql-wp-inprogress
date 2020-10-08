@@ -29,5 +29,15 @@ export const usePostQuery = ({ query, variables, search, isFetch = true }) => {
     setLoading(false);
   }, [data]);
 
-  return { data, loading, error: isPostError || isSettingError, postsPerPage };
+  useEffect(() => {
+    if (isFetch) return;
+    setLoading(false);
+  }, [isFetch]);
+
+  return {
+    data,
+    loading,
+    error: isPostError || isSettingError,
+    postsPerPage
+  };
 };

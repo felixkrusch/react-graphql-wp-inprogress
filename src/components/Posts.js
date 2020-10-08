@@ -177,9 +177,9 @@ const Posts = ({ onActivePage }) => {
   const { loading: isLoading, error: isError, data: staticPageData } = useQuery(
     STATIC_PAGE
   );
-  const { data: stickeyPostData, loading: sLoading, error: sError } = useQuery(
-    STICKY_POSTS_QUERY
-  );
+  // const { data: stickeyPostData, loading: sLoading, error: sError } = useQuery(
+  //   STICKY_POSTS_QUERY
+  // );
   const [, { fetchMore }] = postsQuery;
   const { loading, data, error, postsPerPage } = usePostQuery({
     query: postsQuery,
@@ -212,38 +212,23 @@ const Posts = ({ onActivePage }) => {
     onActivePage("posts");
     return () => onActivePage("");
   }, []);
-  if (sLoading) return <Loading />;
-  if (error || sError) return <p>Something wrong happened inside!</p>;
-  const { stickyPosts } = stickeyPostData;
+  if (isLoading) return <Loading />;
+  if (error || isError) return <p>Something wrong happened inside!</p>;
+  // const { stickyPosts } = stickeyPostData;
   const posts = data?.posts || {};
   return (
     <div className="posts">
-      <Search onSearch={val => setSearch(val)} />
-      {frontPageData && (
-        <div>
-          <h3>Home page</h3>
-          <Post post={frontPageData.post} />
-        </div>
-      )}
-
-      {postData && (
-        <div>
-          <h3>Post page</h3>
-          <Post post={postData.post} />
-        </div>
-      )}
-      {posts.pageInfo && (
-        <>
-          <h3>feature section</h3>
-          {!posts?.pageInfo?.hasPreviousPage && (
-            <FeaturedSection stickyPosts={stickyPosts} />
-          )}
-        </>
-      )}
+      <Search
+        onSearch={val => {
+          setSearch(val);
+          setIsFetch(true);
+        }}
+      />
+      {loading && <Loading />}
 
       {posts.nodes && (
         <>
-          <h3>Postlist</h3>
+          <h3>Search Result</h3>
           {posts.nodes?.map(post => (
             <Post key={post.databaseId} post={post} />
           ))}
@@ -257,6 +242,27 @@ const Posts = ({ onActivePage }) => {
           postsPerPage={postsPerPage}
         />
       )}
+      {frontPageData && (
+        <div>
+          <h3>Home page</h3>
+          <Post post={frontPageData.post} />
+        </div>
+      )}
+
+      {postData && (
+        <div>
+          <h3>Post page</h3>
+          <Post post={postData.post} />
+        </div>
+      )}
+      {/* {posts.pageInfo && (
+        <>
+          <h3>feature section</h3>
+          {!posts?.pageInfo?.hasPreviousPage && (
+            <FeaturedSection stickyPosts={stickyPosts} />
+          )}
+        </>
+      )} */}
     </div>
   );
 };
@@ -289,6 +295,7 @@ const Search = ({ onSearch }) => {
       <Input
         value={search}
         onChange={({ target }) => setSearch(target.value)}
+        onKeyDown={e => e.key === "Enter" && onSearch(search)}
       />
       &nbsp;
       <Button

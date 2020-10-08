@@ -5,7 +5,7 @@ import { gql, useQuery } from "@apollo/client";
 const HEAD_QUERY = gql`
   {
     getCustomizations {
-      siteiconurl
+      # siteiconurl
       frontpagedescription
     }
     allSettings {
@@ -51,12 +51,12 @@ const Head = () => {
   const features = stickyPosts.nodes?.filter(n => n.featuredImage)[0];
   return (
     <Helmet>
-      <link rel="icon" href={getCustomizations?.siteiconurl} sizes="32x32" />
+      {/* <link rel="icon" href={getCustomizations?.siteiconurl} sizes="32x32" />
       <link rel="icon" href={getCustomizations?.siteiconurl} sizes="192x192" />
       <link
         rel="apple-touch-icon-precomposed"
         href={getCustomizations?.siteiconurl}
-      />
+      /> */}
       <title>{allSettings?.generalSettingsTitle}</title>
       <meta
         name="description"
