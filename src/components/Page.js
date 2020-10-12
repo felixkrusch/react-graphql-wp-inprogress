@@ -148,10 +148,13 @@ const Page = () => {
         history.push(
           `/post-format-gallery/${dataId}?i=${window.btoa(imagesDataIds)}`
         );
-      } else if (parent.href.includes(".jpg")) {
-        console.log(parent.href);
-        window.open(`${window.baseUrl}${parent.pathname}`);
+        return;
       }
+    }
+    if (target.src?.includes(".jpg")) {
+      e.preventDefault();
+      window.open(`${target.src}`);
+      return;
     }
     const hasAnchor = target.tagName === "A";
     if (hasAnchor) {
