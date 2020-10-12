@@ -139,15 +139,19 @@ const Page = () => {
     if (dataId && hasParentAnchor) {
       e.preventDefault();
       const parent = target.parentElement;
-      if (!parent.href.includes("post-format-gallery")) return;
-      const parentUl = target.closest("ul");
-      const images = parentUl.querySelectorAll("img");
-      const imagesDataIds = Array.from(images).map(img =>
-        img.getAttribute("data-id")
-      );
-      history.push(
-        `/post-format-gallery/${dataId}?i=${window.btoa(imagesDataIds)}`
-      );
+      if (parent.href.includes("post-format-gallery")) {
+        const parentUl = target.closest("ul");
+        const images = parentUl.querySelectorAll("img");
+        const imagesDataIds = Array.from(images).map(img =>
+          img.getAttribute("data-id")
+        );
+        history.push(
+          `/post-format-gallery/${dataId}?i=${window.btoa(imagesDataIds)}`
+        );
+      } else if (parent.href.includes(".jpg")) {
+        console.log(parent.href);
+        window.open(`${window.baseUrl}${parent.pathname}`);
+      }
     }
     const hasAnchor = target.tagName === "A";
     if (hasAnchor) {

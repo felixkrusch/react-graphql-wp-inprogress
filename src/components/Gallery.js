@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import ReactHtmlParser from "react-html-parser";
 import queryString from "query-string";
 import Loading from "./Loading/Loading";
+import { Button } from "@material-ui/core";
 
 //pages query updated
 const GALLERY_QUERY = gql`
@@ -50,15 +51,20 @@ const Gallery = () => {
   const { mediaItem } = data;
   return (
     <div>
-      Gallery
+      <h3>Gallery</h3>
       <figure>
         <div>{mediaItem.title}</div>
         <img src={mediaItem.mediaItemUrl} alt={mediaItem.altText} />
         <figcaption>{ReactHtmlParser(mediaItem.caption)}</figcaption>
       </figure>
       <div>
-        <button onClick={handlePrev}>Previous</button>
-        <button onClick={handleNext}>Next</button>
+        <Button variant="contained" color="primary" onClick={handlePrev}>
+          Previous
+        </Button>
+        &nbsp;
+        <Button variant="contained" color="primary" onClick={handleNext}>
+          Next
+        </Button>
       </div>
     </div>
   );
