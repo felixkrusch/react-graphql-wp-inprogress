@@ -134,12 +134,24 @@ const Page = () => {
   const { allSettings } = data;
   const handleClick = e => {
     const { target } = e;
+    const hasAnchor = target.tagName === "A";
+    if (hasAnchor) {
+      const regPdf = new RegExp("^.+.(([pP][dD][fF]))$");
+      if (regPdf.test(target.href)) {
+        e.preventDefault();
+        target.href = `${window.baseUrl}${target.pathname}`;
+        window.open(target.href);
+        return;
+      }
+    }
+
     const hasParentAnchor = target.parentElement.tagName === "A";
     const dataId = target.getAttribute("data-id");
     if (dataId && hasParentAnchor) {
       e.preventDefault();
       const parent = target.parentElement;
-      if (parent.href.includes("post-format-gallery")) {
+      const parentLi = target.closest("li.blocks-gallery-item");
+      if (parentLi && !parent.href?.includes(".jpg")) {
         const parentUl = target.closest("ul");
         const images = parentUl.querySelectorAll("img");
         const imagesDataIds = Array.from(images).map(img =>
@@ -148,6 +160,7 @@ const Page = () => {
         history.push(
           `/post-format-gallery/${dataId}?i=${window.btoa(imagesDataIds)}`
         );
+
         return;
       }
     }
@@ -155,15 +168,6 @@ const Page = () => {
       e.preventDefault();
       window.open(`${target.src}`);
       return;
-    }
-    const hasAnchor = target.tagName === "A";
-    if (hasAnchor) {
-      const regPdf = new RegExp("^.+.(([pP][dD][fF]))$");
-      if (regPdf.test(target.href)) {
-        e.preventDefault();
-        target.href = `${window.baseUrl}${target.pathname}`;
-        window.open(target.href);
-      }
     }
   };
   const posts = pData?.posts || {};
